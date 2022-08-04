@@ -16,7 +16,7 @@ data(publictr)
 Dieses Tutorial dient eher beispielhaften Zwecken als pädagogischen. 
 
 ### Datensatz
-In diesem Tutorial sind Daten vom statistischen Bundesamt eingebaut, welche die Nutzung verschiedener Arten des Personennahverkehrs in Deutcschland von 2004 bis 2022 beschreibt. Der Datensatz kann mit `publictr` aufgerufen werden.   
+In diesem Tutorial sind Daten vom statistischen Bundesamt eingebaut, welche die Nutzung verschiedener Arten des Personennahverkehrs in Deutschland von 2004 bis 2022 beschreibt. Der Datensatz kann mit `publictr` aufgerufen werden.   
 Mit `?publictr` finden Sie genauere Erklärungen zu den Daten.
 
 Wir sind interessiert an den Auswirkungen des Corona-Virus auf die Fahrgastzahlen.
@@ -44,7 +44,10 @@ x <- filter(publictr, Typ == "Liniennahverkehr insgesamt")
 x
 ```
 Nun sind wir dem Ziel näher. Um nur die Jahre 2018 bis 2022 anzuzeigen, nutzen wir
-ebenfalls `filter()`. Dieses Mal aber bezogen auf die Variable _Jahr_.
+ebenfalls `filter()`. Dieses Mal aber bezogen auf die Variable _Jahr_. Der Operator
+`%in%` ist dem `==` Gleichheitszeichen ähnlich, und ist hier nötig, da `2018:2019`
+mehr als einen Wert enthält. `==` kann nur einen einzigen Wert gegen einen anderen prüfen,
+während `%in%` mit mehreren Werten auf beiden Seiten umgehen kann.
 
 ```{r filter2-setup, echo = FALSE}
 x <- filter(publictr, Typ == "Liniennahverkehr insgesamt")
@@ -69,11 +72,11 @@ x <- publictr %>%
 ```{r visual, exercise = TRUE}
 ggplot(x, aes(x = Quartal, y = Personen), ) +
   geom_bar(stat = "identity", fill ="blue", alpha = 0.5) +
-  labs(title = "Personennahverkehr in Deutschland", x = "") +
+  labs(title = "Personennahverkehr in Deutschland", x = "", y = "Fahrgastzahlen") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ```
-Wie zu erwarten war, spiegelt sich der erste Lockdown Anfang 2020 auch in der
+Wie hier zu erkennen ist, spiegelt sich der erste Lockdown Anfang 2020 auch in der
 Beförderungsleistung des ÖPNV wieder. 
 
 ### Ende des Tutorials
