@@ -22,9 +22,9 @@ Die Daten stammen vom statistischen Bundesamt.
 
 Führen Sie diesen Code in der R-Konsole aus, um das Paket zu installieren.
 
-``` {r}
-# install.packages("devtools")
-devtools::install_github("blettr/demo")
+```r
+# install.packages("remotes")
+remotes::install_github("blettr/demo")
 ```
 ## Tutorial
 
@@ -34,8 +34,7 @@ da diese im Tutorial genutzt werden.
 
 Ein Browserfenster mit dem Tutorial sollte sich öffnen.
 
-```{r}
-library(demo)
+```r
 #install.packages("learnr")
 #install.packages("tidyverse")
 learnr::run_tutorial("demo", "demo")

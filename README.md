@@ -12,8 +12,8 @@ Führen Sie diesen Code in der R-Konsole aus, um das Paket zu
 installieren.
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("blettr/demo")
+# install.packages("remotes")
+remotes::install_github("blettr/demo")
 ```
 
 ## Tutorial
@@ -25,7 +25,6 @@ und `tidyverse`, da diese im Tutorial genutzt werden.
 Ein Browserfenster mit dem Tutorial sollte sich öffnen.
 
 ``` r
-library(demo)
 #install.packages("learnr")
 #install.packages("tidyverse")
 learnr::run_tutorial("demo", "demo")
