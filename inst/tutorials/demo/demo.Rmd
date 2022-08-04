@@ -46,21 +46,31 @@ x
 ```
 Nun sind wir dem Ziel näher. Um auf die Jahre 2018 bis 2022 zuzugreifen, gehen wir nochmals den gleichen Weg mit `filter()`:
 
-```{r filter2-setup}
+```{r filter2-setup, echo = FALSE}
 x <- filter(publictr, Typ == "Liniennahverkehr insgesamt")
 ```
 
-```{r filter2, exercise = TRUE, exercise.setup = "filter2-setup"}
-x <- filter(x, Jahr %in% 2018:2022)
+```{r filter2, exercise = TRUE}
+x <- filter(x, Jahr %in% 2018:2021)
 
 ```
 Sehr gut! 
 
-### Datenvisualisierung
-
 Nun können wir eine Grafik erstellen, um die Zahlen zu veranschaulichen.
+```{r visual-setup}
+x <- publictr %>%
+  filter( Typ == "Liniennahverkehr insgesamt") %>%
+  filter(Jahr %in% 2018:2021)
+x$Personen <- as.numeric(x$`beförderte Personen [1000]`)
+df <- x %>%
+  group_by(Jahr) %>%
+  summarise(Personen = sum(Personen))
 
-```{r vis, exercise = T, exercise.setup = "filter2-setup"}
-x
+```
+
+```{r visual, exercise = TRUE}
+ggplot(x, aes(x = Quartal, y = `beförderte Personen [1000]`)) +
+  geom_area()
+
 ```
 
