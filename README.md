@@ -22,10 +22,12 @@ Führen Sie das interaktive Tutorial wie folgt aus:
 Installieren Sie vorher, falls noch nicht vorhanden, die Pakete `learnr`
 und `tidyverse`, da diese im Tutorial genutzt werden.
 
-Ein Browserfenster mit dem Tutorial sollte sich öffnen.
-
 ``` r
 #install.packages("learnr")
 #install.packages("tidyverse")
+
 learnr::run_tutorial("demo", "demo")
 ```
+
+Führen Sie diesen Befehl, aus, um das Tutorial zu starten. Ein
+Browserfenster sollte sich öffnen.
