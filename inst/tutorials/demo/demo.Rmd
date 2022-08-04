@@ -7,70 +7,60 @@ runtime: shiny_prerendered
 ```{r setup, include=FALSE}
 library(learnr)
 library(tidyverse)
-knitr::opts_chunk$set(echo = FALSE)
+library(demo)
+data(publictr)
 ```
 
+## Daten
 
-## Mobilitätsdaten
+### Inhaltliche Vorraussetzungen
+Dieses Tutorial dient eher beispielhaften Zwecken als pädagogischen. 
 
-### Exercise 
+### Datensatz
+In diesem Tutorial sind Daten vom statistischen Bundesamt eingebaut, welche die Nutzung verschiedener Arten des Personennahverkehrs in Deutcschland von 2004 bis 2022 beschreibt. Der Datensatz kann mit
+`publictr` aufgerufen werden. Mit `?publictr` finden Sie genauere Erklärungen zu den Daten.
 
-*Here's a simple exercise with an empty code chunk provided for entering the answer.*
+Wir sind interessiert an den Auswirkungen des Corona-Virus auf die Fahrgastzahlen.
 
-Write the R code required to add two plus two:
+### Überblick über die Daten
+Lassen wir uns zunächst den Datensatz anzeigen, um einen Überblick zu bekommen. 
 
-```{r two-plus-two, exercise=TRUE}
+```{r data, exercise = T}
+publictr
 
 ```
+Wir sehen sehr viele Datenpunkte in einem langen Format. Die Daten sind für Menschen schlecht lesbar, für den Computer allerdings ideal arrangiert. Das bedeutet, jede Zeile steht für genau eine Beobachtung, und jede Spalte repräsentiert eine Variable (auch Merkmal genannt), welche verschiedene Ausprägungen haben kann.
 
-### Exercise with Code
 
-*Here's an exercise with some prepopulated code as well as `exercise.lines = 5` to provide a bit more initial room to work.*
+### Auswahl der Daten
+Da wir uns für den ÖPNV insgesamt interessieren, und weniger für einzelne Verkehrsmittel, können wir den Datendschungel etwas lichten. 
 
-Now write a function that adds any two numbers and then call it:
+Wir möchten alle Daten behalten, wo die Variable *Typ* die Ausprägung *Liniennahverkehr insgesamt* aufweist.
 
-```{r add-function, exercise=TRUE, exercise.lines = 5}
-add <- function() {
-  
-}
+Dafür benutzen wir `filter()` aus dem Paket `dplyr`, welches im tidyverse enthalten ist.
+`dplyr` steht für "data plyers", was so viel bedeutet wie "Datenzange". Ein Werkzeug, um bestimmte Daten herauszuziehen.
+
+```{r filter, exercise = TRUE}
+x <- filter(publictr, Typ == "Liniennahverkehr insgesamt")
+x
+```
+Nun sind wir dem Ziel näher. Um auf die Jahre 2018 bis 2022 zuzugreifen, gehen wir nochmals den gleichen Weg mit `filter()`:
+
+```{r filter2-setup}
+x <- filter(publictr, Typ == "Liniennahverkehr insgesamt")
 ```
 
-## Topic 2
+```{r filter2, exercise = TRUE, exercise.setup = "filter2-setup"}
+x <- filter(x, Jahr %in% 2018:2022)
 
-### Exercise with Hint
-
-*Here's an exercise where the chunk is pre-evaulated via the `exercise.eval` option (so the user can see the default output we'd like them to customize). We also add a "hint" to the correct solution via the chunk immediate below labeled `print-limit-hint`.*
-
-Modify the following code to limit the number of rows printed to 5:
-
-```{r print-limit, exercise=TRUE, exercise.eval=TRUE}
-mtcars
 ```
+Sehr gut! 
 
-```{r print-limit-hint}
-head(mtcars)
-```
+### Datenvisualisierung
 
-### Quiz
+Nun können wir eine Grafik erstellen, um die Zahlen zu veranschaulichen.
 
-*You can include any number of single or multiple choice questions as a quiz. Use the `question` function to define a question and the `quiz` function for grouping multiple questions together.*
-
-Some questions to verify that you understand the purposes of various base and recommended R packages:
-
-```{r quiz}
-quiz(
-  question("Which package contains functions for installing other R packages?",
-    answer("base"),
-    answer("tools"),
-    answer("utils", correct = TRUE),
-    answer("codetools")
-  ),
-  question("Which of the R packages listed below are used to create plots?",
-    answer("lattice", correct = TRUE),
-    answer("tools"),
-    answer("stats"),
-    answer("grid", correct = TRUE)
-  )
-)
+```{r vis, exercise = T, exercise.setup = "filter2"}
+x
 ```
 
