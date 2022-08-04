@@ -11,14 +11,13 @@ library(demo)
 data(publictr)
 ```
 
-## Daten
 
 ### Inhaltliche Vorraussetzungen
 Dieses Tutorial dient eher beispielhaften Zwecken als pädagogischen. 
 
 ### Datensatz
-In diesem Tutorial sind Daten vom statistischen Bundesamt eingebaut, welche die Nutzung verschiedener Arten des Personennahverkehrs in Deutcschland von 2004 bis 2022 beschreibt. Der Datensatz kann mit
-`publictr` aufgerufen werden. Mit `?publictr` finden Sie genauere Erklärungen zu den Daten.
+In diesem Tutorial sind Daten vom statistischen Bundesamt eingebaut, welche die Nutzung verschiedener Arten des Personennahverkehrs in Deutcschland von 2004 bis 2022 beschreibt. Der Datensatz kann mit `publictr` aufgerufen werden.   
+Mit `?publictr` finden Sie genauere Erklärungen zu den Daten.
 
 Wir sind interessiert an den Auswirkungen des Corona-Virus auf die Fahrgastzahlen.
 
@@ -44,7 +43,8 @@ Dafür benutzen wir `filter()` aus dem Paket `dplyr`, welches im tidyverse entha
 x <- filter(publictr, Typ == "Liniennahverkehr insgesamt")
 x
 ```
-Nun sind wir dem Ziel näher. Um auf die Jahre 2018 bis 2022 zuzugreifen, gehen wir nochmals den gleichen Weg mit `filter()`:
+Nun sind wir dem Ziel näher. Um nur die Jahre 2018 bis 2022 anzuzeigen, nutzen wir
+ebenfalls `filter()`. Dieses Mal aber bezogen auf die Variable _Jahr_.
 
 ```{r filter2-setup, echo = FALSE}
 x <- filter(publictr, Typ == "Liniennahverkehr insgesamt")
@@ -57,19 +57,26 @@ x
 Sehr gut! 
 
 Nun können wir eine Grafik erstellen, um die Zahlen zu veranschaulichen.
+Dazu nutzen wir `ggplot2`.
+
 ```{r visual-setup}
 x <- publictr %>%
   filter( Typ == "Liniennahverkehr insgesamt") %>%
-  filter(Jahr %in% 2018:2021) %>%
-  group_by(Jahr) %>%
-  summarise(Personen = sum(Personen))
+  filter(Jahr %in% 2018:2021)
 
 ```
 
 ```{r visual, exercise = TRUE}
-ggplot(x, aes(x = Jahr, y = Personen), ) +
+ggplot(x, aes(x = Quartal, y = Personen), ) +
   geom_bar(stat = "identity", fill ="blue", alpha = 0.5) +
-  labs(title = "Personennahverkehr in Deutschland")
+  labs(title = "Personennahverkehr in Deutschland", x = "") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ```
+Wie zu erwarten war, spiegelt sich der erste Lockdown Anfang 2020 auch in der
+Beförderungsleistung des ÖPNV wieder. 
+
+### Ende des Tutorials
+
+
 
