@@ -52,7 +52,7 @@ x <- filter(publictr, Typ == "Liniennahverkehr insgesamt")
 
 ```{r filter2, exercise = TRUE}
 x <- filter(x, Jahr %in% 2018:2021)
-
+x
 ```
 Sehr gut! 
 
@@ -60,17 +60,16 @@ Nun können wir eine Grafik erstellen, um die Zahlen zu veranschaulichen.
 ```{r visual-setup}
 x <- publictr %>%
   filter( Typ == "Liniennahverkehr insgesamt") %>%
-  filter(Jahr %in% 2018:2021)
-x$Personen <- as.numeric(x$`beförderte Personen [1000]`)
-df <- x %>%
+  filter(Jahr %in% 2018:2021) %>%
   group_by(Jahr) %>%
   summarise(Personen = sum(Personen))
 
 ```
 
 ```{r visual, exercise = TRUE}
-ggplot(x, aes(x = Quartal, y = `beförderte Personen [1000]`)) +
-  geom_area()
+ggplot(x, aes(x = Jahr, y = Personen), ) +
+  geom_bar(stat = "identity", fill ="blue", alpha = 0.5) +
+  labs(title = "Personennahverkehr in Deutschland")
 
 ```
 

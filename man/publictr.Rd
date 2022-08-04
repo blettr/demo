@@ -5,7 +5,7 @@
 \alias{publictr}
 \title{public transport}
 \format{
-6 Merkmale mit 456 Ausprägungen
+6 Variablen und 456 Beobachtungen
 
 
 \describe{

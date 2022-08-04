@@ -4,7 +4,7 @@
 #'
 #' @author © Statistisches Bundesamt (Destatis), 2022 | Stand: 04.08.2022 / 00:37:18
 #'
-#' @format 6 Merkmale mit 456 Ausprägungen
+#' @format 6 Variablen und 456 Beobachtungen
 #'
 #'
 #' \describe{
