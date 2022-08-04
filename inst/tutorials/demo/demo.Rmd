@@ -60,7 +60,7 @@ Sehr gut!
 
 Nun können wir eine Grafik erstellen, um die Zahlen zu veranschaulichen.
 
-```{r vis, exercise = T, exercise.setup = "filter2"}
+```{r vis, exercise = T, exercise.setup = "filter2-setup"}
 x
 ```
 
