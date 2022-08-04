@@ -1,16 +1,17 @@
 ---
-title: "Tutorial"
+title: "Datenvisualisierung mit Mobilitätsdaten"
 output: learnr::tutorial
 runtime: shiny_prerendered
 ---
 
 ```{r setup, include=FALSE}
 library(learnr)
+library(tidyverse)
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
 
-## Topic 1
+## Mobilitätsdaten
 
 ### Exercise 
 
