@@ -1,0 +1,1818 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+<meta name="progressive" content="false" />
+<meta name="allow-skip" content="false" />
+<meta name="learnr-version-prerender" content="0.11.5" />
+
+<title>Maße der zentralen Tendenz</title>
+
+<!-- header-includes START -->
+<!-- HEAD_CONTENT -->
+<!-- header-includes END -->
+<!-- HEAD_CONTENT -->
+
+<!-- highlightjs -->
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+<!-- taken from https://github.com/rstudio/rmarkdown/blob/de8a9c38618903627ca509f5401d50a0876079f7/inst/rmd/h/default.html#L293-L343 -->
+<!-- tabsets -->
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+<!-- end tabsets -->
+
+<link rel="stylesheet" href="css/boxes.css" type="text/css" />
+
+</head>
+
+<body>
+<a class='sr-only sr-only-focusable visually-hidden-focusable' href='#learnr-tutorial-content'>Skip to Tutorial Content</a>
+
+
+
+<div class="pageContent band">
+<main class="bandContent page">
+
+<article class="topics" id="learnr-tutorial-content">
+
+<div id="section-inhalt" class="section level2">
+<h2>Inhalt</h2>
+<p>In diesem Tutorial wird dein Wissen zu den Maßen der zentralen
+Tendenz aufgefrischt sowie deren Umsetzung in R besprochen.</p>
+<p>Am Ende kannst du:</p>
+<ul>
+<li><input type="checkbox" unchecked> Den Mittelwert mit
+<code>mean()</code> berechnen </input></li>
+<li><input type="checkbox" unchecked> Den Median mit
+<code>median()</code> berechnen </input></li>
+<li><input type="checkbox" unchecked> Den Modus mit <code>table()</code>
+herausfinden </input></li>
+<li><input type="checkbox" unchecked> Verstehen, wann welches Maß
+angewandt wird </input></li>
+</ul>
+</div>
+<div id="section-zentrale-tendenzen" class="section level2">
+<h2>Zentrale Tendenzen</h2>
+<p>Zur Orientierung, wo wir uns im Prozess befinden: Der Datensatz ist
+nun erhoben und in R eingepflegt, die Analyse kann beginnen!</p>
+<p><img src="images/games.png" /></p>
+<p><a href="https://pbs.twimg.com/media/ER24yA4XUAEGDfh.png:large">image
+source: twimg.com</a></p>
+<p><br></p>
+<p>Wenn du einer anderen Person jetzt von deinen Daten erzählen
+möchtest, könntest du natürlich jeden einzelnen Datenpunkt aufzählen.
+Doch seien wir ehrlich: das dauert lang und das will auch kein Mensch
+hören. Dann stellt sich unweigerlich die Frage: Wie kann ich in
+möglichst kompakter Form, am besten in einer Zahl, über meine Daten
+sprechen und dabei möglichst genau sein?</p>
+<p>Die Antwort: Es kommt darauf an!</p>
+<p>Und worauf? Ganz genau, auf das Skalenniveau. Das ist im übrigend DER
+Grund, warum wir uns das ganze überhaupt erst so umfassend und genau
+angeschaut haben!</p>
+<div id="section-was-kennzeichnet-eine-gute-zusammenfassung"
+class="section level3">
+<h3>Was kennzeichnet eine gute Zusammenfassung?</h3>
+<p>Woher weiß ich, unabhängig von der Skala, dass ich eine gute Zahl
+gewählt habe, um meine Daten zu beschreiben?</p>
+<blockquote>
+<p>Daten sind bestmöglich beschrieben, wenn die zusammenfassende Zahl
+den kleinstmöglichen Fehlerwert aufweist!</p>
+</blockquote>
+<p>Das gehen wir jetzt gemeinsam Skala für Skala durch.</p>
+</div>
+</div>
+<div id="section-kardinalskala" class="section level2"
+data-progressive="TRUE">
+<h2>Kardinalskala</h2>
+<div class="panel panel-default tutorial-question-container">
+<div data-label="synonym" class="tutorial-question panel-body">
+<div id="synonym-answer_container" class="shiny-html-output"></div>
+<div id="synonym-message_container" class="shiny-html-output"></div>
+<div id="synonym-action_button_container" class="shiny-html-output"></div>
+<script>if (Tutorial.triggerMathJax) Tutorial.triggerMathJax()</script>
+</div>
+</div>
+<p>Eben haben wir festgelegt:</p>
+<blockquote>
+<p>Die zusammenfassende Zahl sollte den Fehler minimieren.</p>
+</blockquote>
+<p>Als Fehler lässt sich hier gut die summierte Abweichung von der
+zusammenfassenden Zahl beschreiben. Wir möchten diese Abweichung
+möglichst nahe bei 0 haben.</p>
+<div class="aufgabe">
+<p>Unten siehst du eine interaktive Grafik, die das Konzept der
+Abweichung von der zusammenfassenden Zahl visualisieren soll.</p>
+<p>Nutze den Slider, um eine Zahl zu finden, wo sich die positiven und
+negativen Abweichungen ausbalancieren!</p>
+</div>
+<p><br></p>
+<div class="container-fluid">
+<div class="form-group shiny-input-container">
+<label class="control-label" id="zahl-label" for="zahl">zusammenfassende Zahl:</label>
+<input class="js-range-slider" id="zahl" data-skin="shiny" data-min="1" data-max="10" data-from="5" data-step="0.5" data-grid="true" data-grid-num="9" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number"/>
+</div>
+<div class="shiny-plot-output html-fill-item" id="vis" style="width:100%;height:400px;"></div>
+<div id="psum" class="shiny-html-output"></div>
+<div id="nsum" class="shiny-html-output"></div>
+<hr/>
+<div id="sum" class="shiny-html-output"></div>
+<br/>
+<button id="solution" type="button" class="btn btn-default action-button">
+<i class="far fa-lightbulb" role="presentation" aria-label="lightbulb icon"></i>
+Lösung
+</button>
+<button id="new" type="button" class="btn btn-default action-button">
+<i class="fas fa-rotate" role="presentation" aria-label="rotate icon"></i>
+Neue Zahlenreihe!
+</button>
+</div>
+<br> <br>
+<hr>
+<p>Klasse! Du hast eben durch Ausprobieren diejenige Zahl gefunden,
+welche den wenigsten Fehler hat.<br />
+Da es zu aufwändig wäre immer Ausprobieren zu müssen, haben sich schlaue
+Mathematiker*innen hingesetzt und das ganze auf Formelebene gelöst. Sie
+fanden heraus, dass die genaueste Zahl diejenige ist, die herauskommt,
+wenn du alle vorhandenen summierst und durch ihre Anzahl teilst. Also
+kurz: das arithmetische Mittel oder der Mittelwert, auf englisch:
+mean.</p>
+<p><span class="math display">\[
+{\large \bar{x} = \frac{\sum_{i=1}^{n}{x_i}}{n}}
+\]</span></p>
+<div class="infobox">
+<p>Die Funktion für den Mittelwert in R ist <code>mean()</code>.</p>
+</div>
+<p><br></p>
+<div class="aufgabe">
+<p>Finde den Mittelwert der Variable <code>iq</code> heraus!</p>
+</div>
+<div class="tutorial-exercise-support" data-label="mean-solution"
+data-completion="1" data-diagnostics="1" data-startover="1"
+data-lines="0" data-pipe="|&gt;">
+<pre class="text"><code>mean(iq)</code></pre>
+</div>
+<div class="tutorial-exercise" data-label="mean" data-completion="1"
+data-diagnostics="1" data-startover="1" data-lines="0"
+data-pipe="|&gt;">
+<pre class="text"><code>iq &lt;- c(100, 103, 114, 85, 101, 91, 84, 103, 117, 102)
+
+mean()</code></pre>
+<script type="application/json" data-ui-opts="1">{"engine":"r","has_checker":false,"caption":"Mittelwert berechnen"}</script>
+</div>
+<p><br></p>
+<div id="section-mittelwert-einer-tabellenspalte"
+class="section level3">
+<h3>Mittelwert einer Tabellenspalte</h3>
+<p>Nun wenden wir das auf eine Tabellenspalte an. Als Daten dient uns
+der Datensatz <code>rtutorials::einkaufen</code>, welcher von
+Studierenden 2022 in ihrer Felderhebung erstellt wurde. Das Ziel ist,
+den Mittelwert der Spalte <code>alter</code> zu berechnen.</p>
+<p>So sieht der Datensatz <code>einkaufen</code> aus (reduziert auf die
+Spalten: Alter, Verkehrsmittel, Weg, Frequenz):</p>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["alter"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["verkehrsmittel"],"name":[2],"type":["fct"],"align":["left"]},{"label":["weg"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["frequenz"],"name":[4],"type":["ord"],"align":["right"]}],"data":[{"1":"22","2":"Fahrrad","3":"5.00","4":"mehrfach die Woche"},{"1":"23","2":"ÖPNV","3":"2.00","4":"seltener"},{"1":"26","2":"Zu Fuß","3":"0.90","4":"einmal im Monat"},{"1":"24","2":"Zu Fuß","3":"0.80","4":"einmal im Monat"},{"1":"25","2":"Zu Fuß","3":"2.00","4":"alle zwei Wochen"},{"1":"27","2":"Auto","3":"17.00","4":"alle zwei Wochen"},{"1":"47","2":"Auto","3":"1.80","4":"mehrfach die Woche"},{"1":"49","2":"Zu Fuß","3":"0.90","4":"mehrfach die Woche"},{"1":"25","2":"Fahrrad","3":"0.80","4":"einmal die Woche"},{"1":"46","2":"Fahrrad","3":"7.00","4":"mehrfach die Woche"},{"1":"25","2":"ÖPNV","3":"3.00","4":"mehrfach die Woche"},{"1":"22","2":"ÖPNV","3":"3.00","4":"mehrfach die Woche"},{"1":"23","2":"ÖPNV","3":"3.00","4":"einmal die Woche"},{"1":"35","2":"Fahrrad","3":"2.00","4":"einmal im Monat"},{"1":"23","2":"ÖPNV","3":"60.00","4":"seltener"},{"1":"52","2":"ÖPNV","3":"60.00","4":"seltener"},{"1":"36","2":"Zu Fuß","3":"2.00","4":"mehrfach die Woche"},{"1":"40","2":"Zu Fuß","3":"0.20","4":"mehrfach die Woche"},{"1":"48","2":"ÖPNV","3":"3.00","4":"mehrfach die Woche"},{"1":"55","2":"Fahrrad","3":"7.00","4":"einmal die Woche"},{"1":"20","2":"Auto","3":"8.00","4":"einmal im Monat"},{"1":"58","2":"Auto","3":"30.00","4":"einmal die Woche"},{"1":"21","2":"ÖPNV","3":"15.00","4":"einmal im Monat"},{"1":"60","2":"Auto","3":"5.00","4":"einmal im Monat"},{"1":"24","2":"Auto","3":"5.00","4":"einmal im Monat"},{"1":"27","2":"Auto","3":"5.00","4":"alle zwei Wochen"},{"1":"23","2":"ÖPNV","3":"10.00","4":"alle zwei Wochen"},{"1":"35","2":"Fahrrad","3":"4.00","4":"alle zwei Wochen"},{"1":"38","2":"Auto","3":"3.00","4":"mehrfach die Woche"},{"1":"20","2":"Zu Fuß","3":"2.00","4":"alle zwei Wochen"},{"1":"14","2":"Zu Fuß","3":"2.00","4":"alle zwei Wochen"},{"1":"62","2":"Fahrrad","3":"3.00","4":"mehrfach die Woche"},{"1":"43","2":"Auto","3":"5.00","4":"einmal die Woche"},{"1":"24","2":"Zu Fuß","3":"5.00","4":"seltener"},{"1":"31","2":"Zu Fuß","3":"10.00","4":"einmal im Monat"},{"1":"32","2":"Fahrrad","3":"10.00","4":"einmal im Monat"},{"1":"28","2":"Fahrrad","3":"10.00","4":"alle zwei Wochen"},{"1":"30","2":"Fahrrad","3":"10.00","4":"einmal die Woche"},{"1":"42","2":"ÖPNV","3":"15.00","4":"einmal im Monat"},{"1":"49","2":"ÖPNV","3":"20.00","4":"einmal im Monat"},{"1":"33","2":"Zu Fuß","3":"2.00","4":"alle zwei Wochen"},{"1":"22","2":"ÖPNV","3":"35.00","4":"mehrfach die Woche"},{"1":"59","2":"Fahrrad","3":"4.00","4":"einmal die Woche"},{"1":"69","2":"Zu Fuß","3":"2.00","4":"mehrfach die Woche"},{"1":"58","2":"Zu Fuß","3":"0.80","4":"mehrfach die Woche"},{"1":"31","2":"Zu Fuß","3":"0.40","4":"mehrfach die Woche"},{"1":"34","2":"ÖPNV","3":"3.00","4":"mehrfach die Woche"},{"1":"68","2":"ÖPNV","3":"2.00","4":"einmal die Woche"},{"1":"19","2":"ÖPNV","3":"5.00","4":"seltener"},{"1":"NA","2":"Auto","3":"40.00","4":"alle zwei Wochen"},{"1":"68","2":"Auto","3":"10.00","4":"einmal die Woche"},{"1":"65","2":"Auto","3":"10.00","4":"einmal die Woche"},{"1":"59","2":"Auto","3":"10.00","4":"mehrfach die Woche"},{"1":"57","2":"ÖPNV","3":"8.00","4":"mehrfach die Woche"},{"1":"56","2":"ÖPNV","3":"140.00","4":"einmal die Woche"},{"1":"43","2":"ÖPNV","3":"600.00","4":"alle zwei Wochen"},{"1":"29","2":"Fahrrad","3":"7.00","4":"mehrfach die Woche"},{"1":"59","2":"ÖPNV","3":"8.00","4":"mehrfach die Woche"},{"1":"58","2":"Auto","3":"12.00","4":"mehrfach die Woche"},{"1":"75","2":"ÖPNV","3":"2.00","4":"einmal die Woche"},{"1":"40","2":"Auto","3":"5.00","4":"mehrfach die Woche"},{"1":"68","2":"Fahrrad","3":"2.50","4":"einmal im Monat"},{"1":"83","2":"Auto","3":"1.50","4":"seltener"},{"1":"31","2":"Zu Fuß","3":"0.10","4":"einmal im Monat"},{"1":"20","2":"Fahrrad","3":"3.50","4":"mehrfach die Woche"},{"1":"59","2":"Fahrrad","3":"18.00","4":"seltener"},{"1":"64","2":"Auto","3":"3.00","4":"seltener"},{"1":"49","2":"Auto","3":"6.00","4":"alle zwei Wochen"},{"1":"57","2":"Zu Fuß","3":"0.25","4":"seltener"},{"1":"58","2":"Auto","3":"4.00","4":"alle zwei Wochen"},{"1":"62","2":"ÖPNV","3":"287.00","4":"seltener"},{"1":"44","2":"Auto","3":"4.00","4":"seltener"},{"1":"61","2":"Auto","3":"1.00","4":"seltener"},{"1":"21","2":"Fahrrad","3":"1.50","4":"mehrfach die Woche"},{"1":"20","2":"Zu Fuß","3":"0.50","4":"seltener"},{"1":"23","2":"Fahrrad","3":"1.50","4":"alle zwei Wochen"},{"1":"54","2":"Auto","3":"3.00","4":"alle zwei Wochen"},{"1":"27","2":"Fahrrad","3":"3.00","4":"mehrfach die Woche"},{"1":"55","2":"Auto","3":"0.75","4":"seltener"},{"1":"30","2":"Zu Fuß","3":"0.50","4":"einmal im Monat"},{"1":"24","2":"Zu Fuß","3":"0.10","4":"seltener"},{"1":"31","2":"Auto","3":"4.00","4":"mehrfach die Woche"},{"1":"51","2":"Auto","3":"2.00","4":"einmal die Woche"},{"1":"29","2":"Fahrrad","3":"1.00","4":"alle zwei Wochen"},{"1":"23","2":"Auto","3":"5.00","4":"einmal die Woche"},{"1":"32","2":"Zu Fuß","3":"0.50","4":"mehrfach die Woche"},{"1":"30","2":"Zu Fuß","3":"0.20","4":"einmal die Woche"},{"1":"43","2":"Zu Fuß","3":"0.20","4":"alle zwei Wochen"},{"1":"43","2":"Auto","3":"4.00","4":"alle zwei Wochen"},{"1":"28","2":"Fahrrad","3":"1.00","4":"einmal die Woche"},{"1":"27","2":"Fahrrad","3":"1.50","4":"einmal die Woche"},{"1":"26","2":"Zu Fuß","3":"0.50","4":"mehrfach die Woche"},{"1":"28","2":"Fahrrad","3":"1.50","4":"mehrfach die Woche"},{"1":"48","2":"Auto","3":"4.00","4":"einmal die Woche"},{"1":"55","2":"Auto","3":"2.00","4":"einmal die Woche"},{"1":"28","2":"ÖPNV","3":"3.00","4":"einmal die Woche"},{"1":"48","2":"Auto","3":"3.00","4":"einmal im Monat"},{"1":"26","2":"Fahrrad","3":"1.00","4":"mehrfach die Woche"},{"1":"56","2":"Auto","3":"2.50","4":"seltener"},{"1":"25","2":"ÖPNV","3":"2.00","4":"einmal die Woche"},{"1":"32","2":"ÖPNV","3":"2.00","4":"alle zwei Wochen"},{"1":"38","2":"Zu Fuß","3":"1.00","4":"einmal die Woche"},{"1":"51","2":"Auto","3":"4.00","4":"mehrfach die Woche"},{"1":"33","2":"Fahrrad","3":"5.00","4":"mehrfach die Woche"},{"1":"20","2":"Fahrrad","3":"4.00","4":"alle zwei Wochen"},{"1":"10","2":"Zu Fuß","3":"2.00","4":"seltener"},{"1":"41","2":"Zu Fuß","3":"2.00","4":"einmal die Woche"},{"1":"29","2":"ÖPNV","3":"6.00","4":"einmal die Woche"},{"1":"27","2":"Fahrrad","3":"4.00","4":"mehrfach die Woche"},{"1":"29","2":"Fahrrad","3":"4.00","4":"einmal die Woche"},{"1":"81","2":"Zu Fuß","3":"1.00","4":"mehrfach die Woche"},{"1":"83","2":"Zu Fuß","3":"1.00","4":"mehrfach die Woche"},{"1":"50","2":"Auto","3":"3.00","4":"alle zwei Wochen"},{"1":"44","2":"Fahrrad","3":"5.00","4":"mehrfach die Woche"},{"1":"63","2":"Fahrrad","3":"2.00","4":"einmal die Woche"},{"1":"33","2":"Zu Fuß","3":"2.00","4":"einmal die Woche"},{"1":"24","2":"ÖPNV","3":"4.00","4":"einmal die Woche"},{"1":"49","2":"Zu Fuß","3":"1.00","4":"mehrfach die Woche"},{"1":"20","2":"Auto","3":"10.00","4":"einmal im Monat"},{"1":"21","2":"Auto","3":"14.00","4":"seltener"},{"1":"49","2":"Auto","3":"3.00","4":"mehrfach die Woche"},{"1":"76","2":"Fahrrad","3":"1.00","4":"mehrfach die Woche"},{"1":"77","2":"Fahrrad","3":"1.00","4":"mehrfach die Woche"},{"1":"9","2":"Zu Fuß","3":"3.00","4":"einmal die Woche"},{"1":"44","2":"Zu Fuß","3":"3.00","4":"mehrfach die Woche"},{"1":"55","2":"Andere","3":"65.00","4":"mehrfach die Woche"},{"1":"66","2":"Andere","3":"30.00","4":"mehrfach die Woche"},{"1":"78","2":"E-Roller","3":"4.00","4":"mehrfach die Woche"},{"1":"65","2":"Andere","3":"40.00","4":"seltener"},{"1":"30","2":"Fahrrad","3":"5.00","4":"alle zwei Wochen"},{"1":"20","2":"Zu Fuß","3":"3.00","4":"einmal im Monat"},{"1":"34","2":"NA","3":"20.00","4":"mehrfach die Woche"},{"1":"84","2":"Motorrad","3":"6.00","4":"mehrfach die Woche"},{"1":"67","2":"Zu Fuß","3":"8.00","4":"mehrfach die Woche"},{"1":"87","2":"Andere","3":"8.00","4":"seltener"},{"1":"NA","2":"Andere","3":"10.00","4":"einmal im Monat"},{"1":"80","2":"Zu Fuß","3":"5.00","4":"mehrfach die Woche"},{"1":"19","2":"Andere","3":"3.00","4":"mehrfach die Woche"},{"1":"64","2":"Andere","3":"50.00","4":"einmal die Woche"},{"1":"66","2":"Zu Fuß","3":"13.00","4":"einmal die Woche"},{"1":"69","2":"Auto","3":"13.00","4":"mehrfach die Woche"},{"1":"32","2":"Auto","3":"1.00","4":"einmal die Woche"},{"1":"67","2":"Andere","3":"3.00","4":"alle zwei Wochen"},{"1":"35","2":"ÖPNV","3":"5.00","4":"mehrfach die Woche"},{"1":"25","2":"Andere","3":"2.50","4":"alle zwei Wochen"},{"1":"40","2":"Zu Fuß","3":"1.00","4":"einmal die Woche"},{"1":"70","2":"ÖPNV","3":"8.00","4":"einmal die Woche"},{"1":"64","2":"Auto","3":"2.00","4":"mehrfach die Woche"},{"1":"33","2":"Fahrrad","3":"1.70","4":"mehrfach die Woche"},{"1":"69","2":"Auto","3":"3.00","4":"einmal die Woche"},{"1":"35","2":"Auto","3":"7.00","4":"mehrfach die Woche"},{"1":"NA","2":"Zu Fuß","3":"NA","4":"einmal die Woche"},{"1":"67","2":"Fahrrad","3":"1.50","4":"einmal die Woche"},{"1":"69","2":"Auto","3":"2.00","4":"einmal die Woche"},{"1":"59","2":"Zu Fuß","3":"2.00","4":"einmal die Woche"},{"1":"48","2":"Fahrrad","3":"0.50","4":"einmal die Woche"},{"1":"61","2":"Fahrrad","3":"1.00","4":"mehrfach die Woche"},{"1":"19","2":"Zu Fuß","3":"1.50","4":"einmal die Woche"},{"1":"25","2":"Fahrrad","3":"6.50","4":"mehrfach die Woche"},{"1":"NA","2":"NA","3":"NA","4":"NA"},{"1":"68","2":"Zu Fuß","3":"2.50","4":"einmal die Woche"},{"1":"9","2":"Auto","3":"10.00","4":"einmal die Woche"},{"1":"68","2":"Auto","3":"7.00","4":"einmal die Woche"},{"1":"49","2":"Fahrrad","3":"1.00","4":"mehrfach die Woche"},{"1":"65","2":"Auto","3":"3.00","4":"einmal die Woche"},{"1":"84","2":"Auto","3":"3.00","4":"einmal die Woche"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<div class="aufgabe">
+<p>Berechne den Mittelwert der Spalte <code>alter</code> im Data Frame
+<code>einkaufen</code>!</p>
+<p>Beachte, dass hier entgegen der Konvention die Variablennamen mit
+Großbuchstaben anfangen! Möchtest du diese Variablen also verwenden,
+denk daran Sie ebenfalls mit Großbuchstaben zu schreiben.</p>
+</div>
+<div class="tutorial-exercise" data-label="dfmean" data-completion="1"
+data-diagnostics="1" data-startover="1" data-lines="0"
+data-pipe="|&gt;">
+<pre class="text"><code>mean()</code></pre>
+<script type="application/json" data-ui-opts="1">{"engine":"r","has_checker":false,"caption":"Mittelwert einer Tabellenspalte"}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="dfmean-solution"
+data-completion="1" data-diagnostics="1" data-startover="1"
+data-lines="0" data-pipe="|&gt;">
+<pre class="text"><code>mean(einkaufen$alter) </code></pre>
+</div>
+<p>Huch? Wieso kommt da <code>NA</code> raus?</p>
+<p><code>NA</code> heißt <em>Not Available</em> und ist in R ein
+spezieller Platzhalter für fehlende Werte! <code>NA</code> sagt R so
+etwas wie: Vorsicht, dieser Wert könnte alles enthalten. In Berechnungen
+wirkt sich <code>NA</code> sehr ansteckend aus, denn wenn ein Input
+alles mögliche enthalten könnte, kann auch der Output alles mögliche
+enthalten und ist dementsprechend auch <code>NA</code>. Daraus schließen
+wir, dass die Spalte <code>alter</code> <code>NA</code>s enthält, was
+bei realen Daten sehr oft der Fall ist. Möglicherweise wollten einige
+Personen einfach nicht auf die Frage antworten, wie alt sie sind -
+verständlich. Dann wird <code>NA</code> eingetragen.</p>
+<p>R zwingt uns, explizit zu sein damit, wie wir mit <code>NA</code>s
+umgehen. Es gibt immer eine einfache Lösung, nämlich <code>NA</code>s
+ausschließen und dann die Berechnung durchführen, aber wir müssen erst
+spezifisch sagen, dass wir das tun wollen und es passiert nicht
+automatisch.</p>
+<p>Um <code>NA</code>s zu entfernen, geben wir das Argument
+<code>na.rm = TRUE</code> an die Funktion <code>mean()</code>!
+<code>na.rm</code> steht für <em>NA remove</em>.</p>
+<div class="aufgabe">
+<p>Verändere die Berechnung so, dass <code>NA</code>s entfernt
+werden!</p>
+</div>
+<div class="tutorial-exercise" data-label="narm" data-completion="1"
+data-diagnostics="1" data-startover="1" data-lines="0"
+data-pipe="|&gt;">
+<pre class="text"><code>mean(einkaufen$alter)</code></pre>
+<script type="application/json" data-ui-opts="1">{"engine":"r","has_checker":false,"caption":"NAs entfernen"}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="narm-solution"
+data-completion="1" data-diagnostics="1" data-startover="1"
+data-lines="0" data-pipe="|&gt;">
+<pre class="text"><code>mean(einkaufen$alter, na.rm = TRUE)</code></pre>
+</div>
+<p>Juhu! Es hat funktioniert!</p>
+<div class="panel panel-default tutorial-question-container">
+<div data-label="question_alter" class="tutorial-question panel-body">
+<div id="question_alter-answer_container" class="shiny-html-output"></div>
+<div id="question_alter-message_container" class="shiny-html-output"></div>
+<div id="question_alter-action_button_container" class="shiny-html-output"></div>
+<script>if (Tutorial.triggerMathJax) Tutorial.triggerMathJax()</script>
+</div>
+</div>
+<p><br></p>
+</div>
+<div id="section-die-summe-der-abweichungen-vom-mittelwert-ist-immer-0"
+class="section level3">
+<h3>Die Summe der Abweichungen vom Mittelwert ist immer 0</h3>
+<p>Nun beweisen wir quasi rückwärts, dass das arithmetische Mittel immer
+der Wert ist, wo sich positive und negative Abweichungen gegenseitig
+aufheben. Dafür gehen wir zurück zu unserem einfachen IQ-Beispiel. Es
+gilt:</p>
+<pre><code>sum(iq - mean(iq)) == 0</code></pre>
+<p>Was dieser Code ausgesprochen bedeutet:</p>
+<ol style="list-style-type: decimal">
+<li>Berechne die Differenz jedes IQ-Werts vom Mittelwert.</li>
+<li>Summiere alle Differenzen</li>
+<li>Prüfe, ob das Ergebnis Null ist</li>
+</ol>
+<div class="aufgabe">
+<p>Wende diese Prüfung auf den Vektor <code>iq</code> an, indem du den
+Codeblock ausführst! Versuche die einzelnen Schritte
+nachzuvollziehen.</p>
+</div>
+<div class="tutorial-exercise" data-label="iq_proof" data-completion="1"
+data-diagnostics="1" data-startover="1" data-lines="0"
+data-pipe="|&gt;">
+<pre class="text"><code># 1. Berechne Differenz jedes Werts vom Mittelwert
+iq - mean(iq)
+
+# 2. Summiere alle Differenzen
+sum(iq - mean(iq))
+
+# 3. Prüfe ob das Ergebnis Null ist
+
+sum(iq - mean(iq)) == 0</code></pre>
+<script type="application/json" data-ui-opts="1">{"engine":"r","has_checker":false,"caption":"Heben sich die Abweichungen auf?"}</script>
+</div>
+<p><br></p>
+<div class="infobox">
+<p><strong>Take-Away</strong></p>
+<p>Halten wir fest: Der Mittelwert eines kardinalskalierten Vektors ist
+die einfachste und genaueste Zusammenfassung all seiner einzelnen Werte!
+Wie wir im nächsten Abschnitt sehen werden, ist er aber sehr empfindlich
+gegenüber extremen Werten und manchmal deswegen ein ungeeignetes
+Maß.</p>
+</div>
+</div>
+</div>
+<div id="section-ordinalskala" class="section level2"
+data-progressive="TRUE">
+<h2>Ordinalskala</h2>
+<p>Doch was tun, wenn du es mit ordinalskalierten Daten zu tun hast und
+du sie eben nicht einfach zusammenrechnen kannst (weil die Abstände
+nicht gleichbedeutend sind)?</p>
+<p>Es gibt im Grunde zwei verschiedene Ansätze</p>
+<ol style="list-style-type: decimal">
+<li>Du ignorierst alles, was du über Skalenniveaus gelernt hast und
+rechnest das arithmetische Mittel trotzdem aus. Ab 5 Faktorstufen einer
+ordinalskalierten Skala lässt sich mathematisch zeigen, dass du sie als
+metrisch betrachten und entsprechende Statistiken verwenden kannst (ganz
+praktisches Beispiel: Schulnoten)</li>
+<li>Du findest eine Möglichkeit die Rangplätze zu berücksichtigen.</li>
+</ol>
+<p>Ansatz 1 kannst du schon. Ansatz 2 kommt jetzt:</p>
+<p>Das Gute an den rangskalierten Daten ist, dass du sie anhand ihrer
+Ausprägung in eine logische Reihenfolge bringen kannst.</p>
+<div id="section-beispiel" class="section level3">
+<h3>Beispiel</h3>
+<p>Wir tun jetzt mal so, als wäre der IQ Vektor aus dem vorherigen
+Abschnitt ordinalskaliert. Als Tabelle in der richtigen Reihenfolge
+würde das so aussehen. (R übernimmt das mit der Funktion
+<code>sort()</code> oder <code>table()</code>).</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">IQ Werte sortiert</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">84</td>
+</tr>
+<tr class="even">
+<td align="left">85</td>
+</tr>
+<tr class="odd">
+<td align="left">91</td>
+</tr>
+<tr class="even">
+<td align="left">100</td>
+</tr>
+<tr class="odd">
+<td align="left">101</td>
+</tr>
+<tr class="even">
+<td align="left">102</td>
+</tr>
+<tr class="odd">
+<td align="left">103</td>
+</tr>
+<tr class="even">
+<td align="left">103</td>
+</tr>
+<tr class="odd">
+<td align="left">114</td>
+</tr>
+<tr class="even">
+<td align="left">117</td>
+</tr>
+</tbody>
+</table>
+<p>Nun werden Rangplätze vergeben. Doch: Wenn zwei Zahlen den gleichen
+Wert haben, werden ihre Ränge addiert und durch 2 geteilt und beiden
+zugewiesen. So dass in jedem Fall immer der letzte Eintrag genau den
+gleichen Rang hat, wie es Zahlen insgesamt gibt. (Das übernimmt R mit
+der Funktion <code>rank()</code>. Für die ganz Cleveren:
+<code>rank(sort())</code>.)</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">IQ Werte sortiert</th>
+<th align="left">Ränge</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">84</td>
+<td align="left">1</td>
+</tr>
+<tr class="even">
+<td align="left">85</td>
+<td align="left">2</td>
+</tr>
+<tr class="odd">
+<td align="left">91</td>
+<td align="left">3</td>
+</tr>
+<tr class="even">
+<td align="left">100</td>
+<td align="left">4</td>
+</tr>
+<tr class="odd">
+<td align="left">101</td>
+<td align="left">5</td>
+</tr>
+<tr class="even">
+<td align="left">102</td>
+<td align="left">6</td>
+</tr>
+<tr class="odd">
+<td align="left">103</td>
+<td align="left">7.5</td>
+</tr>
+<tr class="even">
+<td align="left">103</td>
+<td align="left">7.5</td>
+</tr>
+<tr class="odd">
+<td align="left">114</td>
+<td align="left">9</td>
+</tr>
+<tr class="even">
+<td align="left">117</td>
+<td align="left">10</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="section-median-berechnen" class="section level3">
+<h3>Median berechnen</h3>
+<p>Der Median ist der Wert, wo gleich viele Werte drüber und drunter
+liegen. Je nachdem, ob wir eine gerade Anzahl von Werten haben,
+unterscheidet sich die Berechnung:</p>
+<p><strong>ungerade Anzahl</strong></p>
+<p>Bei einer ungeraden Anzahl von Werten gibt es einen, der genau in der
+Mitte liegt. Der ist dann auch der Median. Sehr praktisch.</p>
+<p><img src="3_zentrale_tendenz_gesa_files/figure-html/unnamed-chunk-1-1.png" width="90%" /></p>
+<p><strong>gerade Anzahl</strong></p>
+<p>Das ist bei einer geraden Anzahl nicht der Fall, und der Median ist
+dann der Mittelwert beider Werte die in der Mitte sind.</p>
+<p><img src="3_zentrale_tendenz_gesa_files/figure-html/unnamed-chunk-2-1.png" width="90%" /></p>
+<p><br></p>
+<div id="section-anwendung-auf-das-iq-beispiel" class="section level4">
+<h4>Anwendung auf das IQ-Beispiel</h4>
+<p>Auch im IQ-Beispiel haben wir 10 Werte, also eine gerade Anzahl.</p>
+<p>Bei einer geraden Anzahl von Rängen (wie hier), wo es zwei Werte in
+der Mitte gibt, werden die beiden Werte addiert und durch 2
+geteilt.<br />
+Hier: <span class="math inline">\(Median = \frac{101 + 102}{2} =
+101.5\)</span>.</p>
+<p><img src="3_zentrale_tendenz_gesa_files/figure-html/unnamed-chunk-3-1.png" width="90%" /></p>
+<p>Die Grafik zeigt sehr gut, dass der Median nicht die Werte selbst
+interpretiert, sondern lediglich ihre Rangplätze! Die Abstände zwischen
+den einzelnen IQ-Werten sind zwar eigentlich unterschiedlich groß, aber
+da wir ordinales Skalenniveau haben, fällt diese Information weg.</p>
+<div class="infobox">
+<p>Die Funktion in R für die Berechnung des Medians ist:
+<code>median()</code></p>
+</div>
+<p><br></p>
+<div class="aufgabe">
+<p>Finde mittels der <code>median()</code>-Funktion den Median für die
+IQ-Variable heraus!</p>
+</div>
+<div class="tutorial-exercise-support" data-label="median-solution"
+data-completion="1" data-diagnostics="1" data-startover="1"
+data-lines="0" data-pipe="|&gt;">
+<pre class="text"><code>median(iq)</code></pre>
+</div>
+<div class="tutorial-exercise" data-label="median" data-completion="1"
+data-diagnostics="1" data-startover="1" data-lines="0"
+data-pipe="|&gt;">
+<pre class="text"><code>iq</code></pre>
+<script type="application/json" data-ui-opts="1">{"engine":"r","has_checker":false,"caption":"<span data-i18n=\"text.enginecap\" data-i18n-opts=\"{&quot;engine&quot;:&quot;R&quot;}\">R Code<\/span>"}</script>
+</div>
+<p>Klasse! Das ist genau das Gleiche, was wir auch per Hand berechnet
+haben.</p>
+</div>
+</div>
+<div id="section-median-einer-tabellenspalte-berechnen"
+class="section level3">
+<h3>Median einer Tabellenspalte berechnen</h3>
+<div class="aufgabe">
+<p>Berechne dieses Mal den Median der Spalte
+<code>einkaufen$alter</code>!</p>
+<ul>
+<li>Verwende auch hier das Argument <code>na.rm = TRUE</code>, um
+<code>NA</code>s zu entfernen.</li>
+</ul>
+</div>
+<div class="tutorial-exercise" data-label="altermedian"
+data-completion="1" data-diagnostics="1" data-startover="1"
+data-lines="0" data-pipe="|&gt;">
+<pre class="text"><code>median()</code></pre>
+<script type="application/json" data-ui-opts="1">{"engine":"r","has_checker":false,"caption":"Median einer Tabellenspalte"}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="altermedian-solution"
+data-completion="1" data-diagnostics="1" data-startover="1"
+data-lines="0" data-pipe="|&gt;">
+<pre class="text"><code>median(einkaufen$alter)</code></pre>
+</div>
+<div class="panel panel-default tutorial-question-container">
+<div data-label="question_altermedian" class="tutorial-question panel-body">
+<div id="question_altermedian-answer_container" class="shiny-html-output"></div>
+<div id="question_altermedian-message_container" class="shiny-html-output"></div>
+<div id="question_altermedian-action_button_container" class="shiny-html-output"></div>
+<script>if (Tutorial.triggerMathJax) Tutorial.triggerMathJax()</script>
+</div>
+</div>
+</div>
+<div id="section-vergleich-arithmetisches-mittel-und-median"
+class="section level3">
+<h3>Vergleich arithmetisches Mittel und Median</h3>
+<p>Eben haben wir herausgefunden, dass der Median des Alters im
+Datensatz <code>einkaufen</code> 40.5 beträgt, und das arithmetische
+Mittel ca. 43. Diese beiden Werte liegen verhältnismäßig nah
+beieinander, siehe Grafik:</p>
+<p><img src="3_zentrale_tendenz_gesa_files/figure-html/altermeanmed-1.png" width="624" /></p>
+<p>Es ist in manchen Fällen sinnvoll, sich beide Werte (Mittelwert und
+Median) anzuschauen und zu vergleichen. Wenn sie nah beieinander liegen
+ist es super, wenn nicht, ist es essentiell sich nochmal die Werte
+anzuschauen und sich über Außreißerwerte Gedanken zu machen und wie mit
+ihnen umgegangen werden soll (üblicherweise eine der drei Alternativen:
+rausschmeißen und Mittelwert berechnen, Ausreißer drin behalten und
+Mittelwert berechnen, Median berechnen)</p>
+<div id="section-warum-median-wenn-ich-doch-metrische-daten-habe"
+class="section level4">
+<h4>Warum Median, wenn ich doch metrische Daten habe?</h4>
+<p>Er ist robuster und in manchen Fällen sogar inhaltlich
+aussagekräftiger. Ein gutes Beispiel wäre: Eine Person hat 0€ auf dem
+Konto, eine andere 100€ und die dritte 5 000€. Der Mittelwert würde
+jetzt sagen, dass die Menschen im Durchschnitt
+<font color="red">1700€</font> auf dem Konto haben. Das bildet die
+Realität nicht wirklich ab. Der Median hingegen würde
+<font color="blue">100€</font> sagen, was vom Verständnis her besser
+passt.</p>
+<p><img src="3_zentrale_tendenz_gesa_files/figure-html/unnamed-chunk-4-1.png" width="90%" /></p>
+<p>Eine schnelle Übersicht bietet dir die Funktion
+<code>summary()</code>. Hier werden dir Mittelwert (mean), Median,
+Reichweite (kleinster Wert und größter Wert) sowie der
+Interquartilsabstand (nächster Block, Tutorial Dispersionsmaße)
+angezeigt.</p>
+<div class="aufgabe">
+<p>Wende die Funktion summary() auf den Vektor <code>iq</code> an und
+mach dich mit dem Ergebnis vertraut!</p>
+</div>
+<div class="tutorial-exercise-support" data-label="summary-solution"
+data-completion="1" data-diagnostics="1" data-startover="1"
+data-lines="0" data-pipe="|&gt;">
+<pre class="text"><code>summary(iq)</code></pre>
+</div>
+<div class="tutorial-exercise" data-label="summary" data-completion="1"
+data-diagnostics="1" data-startover="1" data-lines="0"
+data-pipe="|&gt;">
+<pre class="text"><code>iq</code></pre>
+<script type="application/json" data-ui-opts="1">{"engine":"r","has_checker":false,"caption":"<span data-i18n=\"text.enginecap\" data-i18n-opts=\"{&quot;engine&quot;:&quot;R&quot;}\">R Code<\/span>"}</script>
+</div>
+<p>Zusammenfassend lässt sich also sagen: Der Median ist eine gute
+Zusammenfassung für ordinalskalierte und in manchen Fällen (zB. viele/
+krasse Ausreißer) auch intervallskalierte Daten.</p>
+</div>
+</div>
+</div>
+<div id="section-nominalskala" class="section level2">
+<h2>Nominalskala</h2>
+<p>Hier gibt es keine logische Reihenfolge. Insofern fallen Mittelwert
+und Median raus. Um möglichst wenige Fehler in der Vorhersage zu machen,
+ist es logischerweise sinnvoll, die Kategorie anzugeben, welche die
+meisten Werte haben. Das wird dann <strong>Modus</strong> genannt.</p>
+<p>Gegeben sei die Lieblingsfarbe von 10 anderen Studis:</p>
+<pre><code>c(&quot;pink&quot;, &quot;pink&quot;, &quot;blau&quot;, &quot;blau&quot;, &quot;pink&quot;, &quot;blau&quot;, &quot;blau&quot;, &quot;pink&quot;, &quot;lila&quot;, &quot;pink&quot;)</code></pre>
+<p>Da es eine nominale Variable mit wiederkehrenden Kategorien ist,
+sollten wir sie als <code>factor()</code> speichern.</p>
+<p>Um heraus zu finden, welche Gruppe am größten ist, könntest du zählen
+und eine Strichliste machen. ODER du lässt ganz smooth R für dich
+arbeiten. Hierfür brauchst du wieder die Funktion
+<code>summary()</code>.</p>
+<div class="aufgabe">
+<ol style="list-style-type: decimal">
+<li>Erstelle einen neuen Vektor namens <code>farben</code>, der ein
+Faktor <code>factor()</code> ist und die oben angegebenen Werte
+enthält!</li>
+<li>Lass dir eine Zusammenfassung der Werte mit der
+<code>summary()</code>-Funktion ausgeben!</li>
+</ol>
+</div>
+<div class="tutorial-exercise" data-label="nominal" data-completion="1"
+data-diagnostics="1" data-startover="1" data-lines="0"
+data-pipe="|&gt;">
+<script type="application/json" data-ui-opts="1">{"engine":"r","has_checker":false,"caption":"<span data-i18n=\"text.enginecap\" data-i18n-opts=\"{&quot;engine&quot;:&quot;R&quot;}\">R Code<\/span>"}</script>
+</div>
+<div class="tutorial-exercise-support" data-label="nominal-solution"
+data-completion="1" data-diagnostics="1" data-startover="1"
+data-lines="0" data-pipe="|&gt;">
+<pre class="text"><code>farben &lt;- factor(c(&quot;pink&quot;, &quot;pink&quot;, &quot;blau&quot;, &quot;blau&quot;, &quot;pink&quot;, &quot;blau&quot;, &quot;blau&quot;, &quot;pink&quot;, &quot;lila&quot;, &quot;pink&quot;))
+
+summary(farben)</code></pre>
+</div>
+<p>Doch warte mal - oben hat die gleiche Funktion doch auch einen
+numerischen Vektor bearbeitet und jetzt kann sie auch mit einem
+<code>factor</code> umgehen? Und das Ergebnis sieht auch ganz anders
+aus.</p>
+<p>JA!</p>
+<p>Deswegen war das Vektoren-Tutorial auch so wichtig! R erkennt, dass
+es eine andere Objektklasse ist und behandelt die Daten dementsprechend
+anders. Wenn du möchtest, kannst du zur Überprüfung einmal den
+<code>farben</code>-Vektor ohne ihn in einen Faktor zu verwandeln in die
+<code>summary()</code>-Funktion stecken:</p>
+<div class="tutorial-exercise" data-label="error" data-completion="1"
+data-diagnostics="1" data-startover="1" data-lines="0"
+data-pipe="|&gt;">
+<pre class="text"><code>farben &lt;- c(&quot;pink&quot;, &quot;pink&quot;, &quot;blau&quot;, &quot;blau&quot;, &quot;pink&quot;, &quot;blau&quot;, &quot;blau&quot;, &quot;pink&quot;, &quot;lila&quot;, &quot;pink&quot;)
+summary(farben)
+table(farben)</code></pre>
+<script type="application/json" data-ui-opts="1">{"engine":"r","has_checker":false,"caption":"<span data-i18n=\"text.enginecap\" data-i18n-opts=\"{&quot;engine&quot;:&quot;R&quot;}\">R Code<\/span>"}</script>
+</div>
+<p>Es wird nur grundsätzliche Information ausgegeben, z.B. dass
+<code>farben</code> die Klasse <code>character</code> hat.</p>
+<p>Die Funktion <code>table()</code> kann exakt das gleiche, nur dass
+ihr egal ist, welche Objektklasse der Vektor hat, die funktioniert
+immer.</p>
+<p>Zurück zum Modus:</p>
+<div class="panel panel-default tutorial-question-container">
+<div data-label="modequest" class="tutorial-question panel-body">
+<div id="modequest-answer_container" class="shiny-html-output"></div>
+<div id="modequest-message_container" class="shiny-html-output"></div>
+<div id="modequest-action_button_container" class="shiny-html-output"></div>
+<script>if (Tutorial.triggerMathJax) Tutorial.triggerMathJax()</script>
+</div>
+</div>
+<details>
+<summary>
+<a>▼ Zeige Balkendiagramm</a>
+</summary>
+<br>
+<img src="3_zentrale_tendenz_gesa_files/figure-html/unnamed-chunk-5-1.png" width="624" />
+</details>
+<p><br></p>
+<div class="infobox">
+<p><strong>Take-Away</strong>:</p>
+<p>Lange Rede, kurzer Sinn: Der Modus ist die am häufigsten vorkommende
+Kategorie bei nominalen Daten und damit die beste Möglichkeit, diese
+zusammen zu fassen.</p>
+</div>
+</div>
+<div id="section-abschlussquizz" class="section level2">
+<h2>Abschlussquizz</h2>
+<div class="panel-heading tutorial-quiz-title">Teste dein Wissen!</div>
+<div class="panel panel-default tutorial-question-container">
+<div data-label="Abschlussquizz-1" class="tutorial-question panel-body">
+<div id="Abschlussquizz-1-answer_container" class="shiny-html-output"></div>
+<div id="Abschlussquizz-1-message_container" class="shiny-html-output"></div>
+<div id="Abschlussquizz-1-action_button_container" class="shiny-html-output"></div>
+<script>if (Tutorial.triggerMathJax) Tutorial.triggerMathJax()</script>
+</div>
+</div>
+<div class="panel panel-default tutorial-question-container">
+<div data-label="Abschlussquizz-2" class="tutorial-question panel-body">
+<div id="Abschlussquizz-2-answer_container" class="shiny-html-output"></div>
+<div id="Abschlussquizz-2-message_container" class="shiny-html-output"></div>
+<div id="Abschlussquizz-2-action_button_container" class="shiny-html-output"></div>
+<script>if (Tutorial.triggerMathJax) Tutorial.triggerMathJax()</script>
+</div>
+</div>
+<div class="panel panel-default tutorial-question-container">
+<div data-label="Abschlussquizz-3" class="tutorial-question panel-body">
+<div id="Abschlussquizz-3-answer_container" class="shiny-html-output"></div>
+<div id="Abschlussquizz-3-message_container" class="shiny-html-output"></div>
+<div id="Abschlussquizz-3-action_button_container" class="shiny-html-output"></div>
+<script>if (Tutorial.triggerMathJax) Tutorial.triggerMathJax()</script>
+</div>
+</div>
+<div class="panel panel-default tutorial-question-container">
+<div data-label="Abschlussquizz-4" class="tutorial-question panel-body">
+<div id="Abschlussquizz-4-answer_container" class="shiny-html-output"></div>
+<div id="Abschlussquizz-4-message_container" class="shiny-html-output"></div>
+<div id="Abschlussquizz-4-action_button_container" class="shiny-html-output"></div>
+<script>if (Tutorial.triggerMathJax) Tutorial.triggerMathJax()</script>
+</div>
+</div>
+</div>
+<div id="section-learnings" class="section level2">
+<h2>Learnings</h2>
+<p>So hast du heute abgeschnitten:</p>
+<br/>
+<button id="get_score" type="button" class="btn btn-default action-button">Auswertung!</button>
+<br/>
+<br/>
+<div id="score" class="shiny-text-output"></div>
+<br/>
+<div id="section-zusammenfassung" class="section level3">
+<h3>Zusammenfassung</h3>
+<p>In diesem Tutorial hast du folgende Funktionen kennengelernt:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Funktion</th>
+<th align="left">Inhalt</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>mean()</code></td>
+<td align="left">Berechnet den Mittelwert.</td>
+</tr>
+<tr class="even">
+<td align="left"><code>median()</code></td>
+<td align="left">Berechnet den Median.</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>sort()</code></td>
+<td align="left">Sortiert einen Zahlenvektor.</td>
+</tr>
+<tr class="even">
+<td align="left"><code>rank()</code></td>
+<td align="left">Gibt die Rangplätze eines Zahlenvektors aus.</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>summary()</code></td>
+<td align="left">Gibt die zentrale Tendenz je nach Objektklasse
+aus.</td>
+</tr>
+<tr class="even">
+<td align="left"><code>table()</code></td>
+<td align="left">Fasst Daten je nach Objektklasse zusammen.</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>sum()</code></td>
+<td align="left">Summiert die Elemente eines Vektors.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="section-credit" class="section level3">
+<h3>Credit</h3>
+<p>Dieses Tutorial wurde von Gesa Graf verfasst, von Lukas Bruelheide
+erweitert und von Marie Klosterkamp reviewt.</p>
+<p>
+<script type="application/shiny-prerendered" data-context="server-start">
+library(learnr)
+library(rtutorials)
+library(shiny)
+
+# Learnr findet Tutorial-Dependencies automatisch heraus mittels renv::dependencies
+# und fragt vor Tutorial-Start, ob fehlende Pakete installiert werden sollen. 
+# Das ist für dieses Tutorial deaktiviert, da wir ein Paket von GitHub nutzen (ggbrace)
+# Die automatische Dependency-Installation erlaubt nur CRAN. Leider habe ich 
+# keinen besseren Weg gefunden als eine .renvignore -Datei im selben Verzeichnis
+# Damit müssen alle Dependencies für dieses Tutorial manuell geprüft werden. 
+
+if(!require(ggbrace, quietly = TRUE)){
+  message("\nVersuche Paket 'ggbrace' von GitHub zu installieren. Benötigt eine Internetverbindung. \nOhne dieses Paket funktioniert eine interaktive Grafik nicht.")
+  try(remotes::install_github("NicolasH2/ggbrace"))
+  require(ggbrace)
+}else{
+  require(ggbrace)
+}
+  
+
+if(!require(scales)){
+  message("Installiere fehlendes Paket...")
+  try(install.packages("scales"))
+  require(scales)
+}else{
+  require(scales)
+}
+
+library(ggplot2)
+
+if(!require(dplyr)){
+  message("Installiere fehlendes Paket...")
+  try(install.packages("dplyr"))
+  require(dplyr)
+}else{
+  require(dplyr)
+}
+
+if(!require(shinyFeedback, quietly = TRUE)){
+  message("Installiere fehlendes Paket shinyFeedback")
+  try(install.packages("shinyFeedback"))}
+
+knitr::opts_chunk$set(echo = FALSE)
+
+iq <- c(100, 103, 114, 85, 101, 91, 84, 103, 117, 102)
+
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::register_http_handlers(session, metadata = list(id = "zentrale_tendenj", version = 1L))
+</script>
+
+
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::prepare_tutorial_state(session)
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::i18n_observe_tutorial_language(input, session)
+</script>
+
+
+<script type="application/shiny-prerendered" data-context="server">
+session$onSessionEnded(function() {
+        learnr:::event_trigger(session, "session_stop")
+      })
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::question_prerendered_chunk(structure(list(type = "learnr_checkbox", label = "synonym", question = structure("Was ist alles ein Synonym für Kardinalskala?", html = TRUE, class = c("html", 
+"character")), answers = list(structure(list(id = "lnr_ans_3e51c5b", 
+    option = "metrisch", value = "metrisch", label = structure("metrisch", html = TRUE, class = c("html", 
+    "character")), correct = TRUE, message = structure("Metrisch oder auch kardinalskaliert ist alles ab der Intervallskala, das heißt, alles, wo Abstände sinnvoll interpretiert werden können.", html = TRUE, class = c("html", 
+    "character")), type = "literal"), class = c("tutorial_question_answer", 
+"tutorial_quiz_answer")), structure(list(id = "lnr_ans_8d0945a", 
+    option = "kategorial", value = "kategorial", label = structure("kategorial", html = TRUE, class = c("html", 
+    "character")), correct = FALSE, message = structure("Kategoriale Daten haben keine sinnvoll interpretierbaren Abstände, und sind deswegen nicht kardinalskaliert, auch wenn beides mit K beginnt.", html = TRUE, class = c("html", 
+    "character")), type = "literal"), class = c("tutorial_question_answer", 
+"tutorial_quiz_answer")), structure(list(id = "lnr_ans_1d96cfe", 
+    option = "Intervallskala", value = "Intervallskala", label = structure("Intervallskala", html = TRUE, class = c("html", 
+    "character")), correct = TRUE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+"tutorial_quiz_answer"))), button_labels = list(submit = structure("<span data-i18n=\"button.questionsubmit\">Submit Answer<\u002fspan>", html = TRUE, class = c("html", 
+"character")), try_again = structure("<span data-i18n=\"button.questiontryagain\">Try Again<\u002fspan>", html = TRUE, class = c("html", 
+"character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html", 
+"character")), try_again = structure("Incorrect. Be sure to select every correct answer.", html = TRUE, class = c("html", 
+"character")), incorrect = structure("Incorrect", html = TRUE, class = c("html", 
+"character")), message = NULL, post_message = NULL), ids = list(
+    answer = "synonym-answer", question = "synonym"), loading = NULL, 
+    random_answer_order = TRUE, allow_retry = TRUE, seed = 1598240019.75576, 
+    options = list()), class = c("learnr_checkbox", "tutorial_question"
+)), session = session)
+</script>
+
+
+<script type="application/shiny-prerendered" data-context="server">
+# Mögliche Zahlenreihen-Längen
+sizes <- 3:7
+
+# Mögliche Zahlen: 1 - 9, ganzzahlig
+sampler <- function() sample(1:9, size = sample(sizes, size = 1))
+
+# Vektor mit allen erlaubten Mittelwerten
+test_vec <- reactive({
+  #input$new
+  tv <- seq(from = 1, to = 9, by = 0.5)
+  # Schließe den Wert des Sliders aus, damit die App nicht gelöst startet
+  tv[tv != isolate(input$zahl)]
+}) |> bindEvent(input$new, ignoreNULL = FALSE)
+
+# Zahlenreihen-Generierung
+x <- reactive({
+  # Nehme Abhängigkeit vom Neue Zahlenreihe Knopf
+ # input$new
+  
+  # Wiederhole Sampling, bis Mittelwert erlaubt ist
+  x <- sampler()
+  while(!(mean(x) %in% test_vec())){
+    x <- sampler()
+  }
+  x |> sort()
+}) |> bindEvent(input$new, ignoreNULL = FALSE)
+
+  n <- reactive({
+    length(x())
+  })
+  
+df <- reactive({
+    data.frame(x = x(), y = 0)
+  })
+
+# Konstruiere Basic Plot, der sich nur ändern muss wenn neue Zahlenreihe gedrückt wird. 
+  p <-  reactive({
+    ggplot(df(), aes(x, y)) +
+      geom_point(size = 4) +
+      scale_y_continuous(name = NULL, breaks = NULL) +
+      theme_bw() +
+      theme(text = element_text(size = 20)) +
+      # Füge Achsenbeschriftungen hinzu
+      scale_x_continuous(name = NULL, breaks = x(), minor_breaks = NULL,
+                         #labels = scales::label_number(accuracy = 0.5),
+                         limits = c(1, 10))
+  })
+
+  diff <- reactive({
+    x() - input$zahl
+  })
+
+# Positive Abweichungen
+  pdiff <- reactive({
+    pdiff <- diff()[diff() >= 0]
+  })
+
+# negative Abweichungen
+  ndiff <- reactive({
+    ndiff <- diff()[diff() < 0]
+  })
+
+  output$vis <- renderPlot({
+    # Regeneriere Plot, wenn "neue Zahlenreihe" gedrückt wird
+    input$new
+    z <- input$zahl
+    
+    # Konstruiere Vektor h, der die Höhen der Braces enthält
+    # 1. Rangfolge der negativen Abw. absteigend sortieren und * -1
+    nh <- rank(ndiff()) |> sort(decreasing = T)
+    nh <- nh * (-1)
+    # Rangfolge der positiven Abw., startet bei 0.
+    ph <- rank(pdiff()) - 1
+    # Rangfolge mit dem Rang von z aus gesehen.
+    ranks <- c(nh, ph)
+    # Rescaling für visuelle Verhältnisse
+    h <-  ranks * 0.1
+    
+    # Initialisiere Plot
+    pl <- p()
+    # Füge iterativ Braces hinzu
+    for (i in 1:n()) {
+      r <- ifelse(h[i] >= 0, 0, 180)
+      pl <- pl +
+        geom_brace(aes(x = c(z, x()[!!i]),
+                       y = c(h[!!i] + 0.1, h[!!i]),
+                       label = diff()[!!i]),
+                   inherit.data = F,
+                   rotate = r,
+                   #bending = 0.05,
+                   labelsize = 4,
+                   textORlabel = "label",
+                   labeldistance = 0.01)
+    }
+    # Letzte Schritte beim Plotten: Füge SliderInput hinzu
+    pl + geom_vline(xintercept = z,
+                   color = "#428BCA",
+                   linewidth = 1.5)
+  }) |>
+    bindCache(input$zahl, input$new) # Cache den Plot-Output für mehr Schnelligkeit
+
+
+  # Abweichungen insgesamt
+  output$sum <- renderText({
+    totalsum <- sum(diff())
+    
+    # Wenn Abweichungen == 0, mache den Text Grün, ansonsten schwarz
+    if(totalsum == 0){
+      paste0("Abweichungen insgesamt: ",
+           "<font color=\"#008000\"><b>",
+           round(totalsum, digits = 3),
+           "<\u002fb><\u002ffont>")
+    } else {
+       paste0("Abweichungen insgesamt: ",
+           "<b>",
+           round(totalsum, digits = 3),
+           "<\u002fb>")
+    }
+  }) |> bindCache(input$zahl, input$new)
+
+  # pos. Abw.
+  output$psum <- renderText({
+    paste0("Summe positiver Abweichungen:   ",
+           "<b>", sum(pdiff()) |> round(digits = 3),
+           "<\u002fb>")
+  }) |> bindCache(input$zahl, input$new)
+
+  # neg. Abw.
+  output$nsum <- renderText({
+    paste0("Summe negativer Abweichungen: ",
+           "<font color=\"9c1111\"><b>",
+           sum(ndiff()) |> round(digits = 3),
+           "<\u002fb><\u002ffont>")
+  }) |> bindCache(input$zahl, input$new)
+  
+  observe(updateSliderInput(inputId = "zahl",
+                            value = mean(x()))) |> bindEvent(input$solution)
+  
+  observe(shinyFeedback::feedbackSuccess("zahl",
+                                         show = input$zahl == mean(x()))
+          ) |> bindEvent(input$zahl, input$new)
+  
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-mean-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-mean-code-editor`)), session)
+output$`tutorial-exercise-mean-output` <- renderUI({
+  `tutorial-exercise-mean-result`()
+})
+</script>
+
+
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::store_exercise_cache(structure(list(label = "mean", global_setup = structure(c("library(learnr)", 
+"library(rtutorials)", "library(shiny)", "", "# Learnr findet Tutorial-Dependencies automatisch heraus mittels renv::dependencies", 
+"# und fragt vor Tutorial-Start, ob fehlende Pakete installiert werden sollen. ", 
+"# Das ist für dieses Tutorial deaktiviert, da wir ein Paket von GitHub nutzen (ggbrace)", 
+"# Die automatische Dependency-Installation erlaubt nur CRAN. Leider habe ich ", 
+"# keinen besseren Weg gefunden als eine .renvignore -Datei im selben Verzeichnis", 
+"# Damit müssen alle Dependencies für dieses Tutorial manuell geprüft werden. ", 
+"", "if(!require(ggbrace, quietly = TRUE)){", "  message(\"\\nVersuche Paket 'ggbrace' von GitHub zu installieren. Benötigt eine Internetverbindung. \\nOhne dieses Paket funktioniert eine interaktive Grafik nicht.\")", 
+"  try(remotes::install_github(\"NicolasH2/ggbrace\"))", "  require(ggbrace)", 
+"}else{", "  require(ggbrace)", "}", "  ", "", "if(!require(scales)){", 
+"  message(\"Installiere fehlendes Paket...\")", "  try(install.packages(\"scales\"))", 
+"  require(scales)", "}else{", "  require(scales)", "}", "", 
+"library(ggplot2)", "", "if(!require(dplyr)){", "  message(\"Installiere fehlendes Paket...\")", 
+"  try(install.packages(\"dplyr\"))", "  require(dplyr)", "}else{", 
+"  require(dplyr)", "}", "", "if(!require(shinyFeedback, quietly = TRUE)){", 
+"  message(\"Installiere fehlendes Paket shinyFeedback\")", "  try(install.packages(\"shinyFeedback\"))}", 
+"", "knitr::opts_chunk$set(echo = FALSE)", "", "iq <- c(100, 103, 114, 85, 101, 91, 84, 103, 117, 102)", 
+""), chunk_opts = list(label = "setup", include = FALSE)), setup = NULL, 
+    chunks = list(list(label = "mean", code = "iq <- c(100, 103, 114, 85, 101, 91, 84, 103, 117, 102)\n\nmean()", 
+        opts = list(label = "\"mean\"", exercise = "TRUE", exercise.cap = "\"Mittelwert berechnen\""), 
+        engine = "r")), code_check = NULL, error_check = NULL, 
+    check = NULL, solution = structure("mean(iq)", chunk_opts = list(
+        label = "mean-solution")), tests = NULL, options = list(
+        eval = FALSE, echo = TRUE, results = "markup", tidy = FALSE, 
+        tidy.opts = NULL, collapse = FALSE, prompt = FALSE, comment = NA, 
+        highlight = FALSE, size = "normalsize", background = "#F7F7F7", 
+        strip.white = TRUE, cache = 0, cache.path = "3_zentrale_tendenz_gesa_cache/html/", 
+        cache.vars = NULL, cache.lazy = TRUE, dependson = NULL, 
+        autodep = FALSE, cache.rebuild = FALSE, fig.keep = "high", 
+        fig.show = "asis", fig.align = "default", fig.path = "3_zentrale_tendenz_gesa_files/figure-html/", 
+        dev = "png", dev.args = NULL, dpi = 192, fig.ext = "png", 
+        fig.width = 6.5, fig.height = 4, fig.env = "figure", 
+        fig.cap = NULL, fig.scap = NULL, fig.lp = "fig:", fig.subcap = NULL, 
+        fig.pos = "", out.width = 624, out.height = NULL, out.extra = NULL, 
+        fig.retina = 2, external = TRUE, sanitize = FALSE, interval = 1, 
+        aniopts = "controls,loop", warning = TRUE, error = FALSE, 
+        message = TRUE, render = NULL, ref.label = NULL, child = NULL, 
+        engine = "r", split = FALSE, include = TRUE, purl = TRUE, 
+        max.print = 1000, label = "mean", exercise = TRUE, exercise.cap = "Mittelwert berechnen", 
+        code = c("iq <- c(100, 103, 114, 85, 101, 91, 84, 103, 117, 102)", 
+        "", "mean()"), out.width.px = 624, out.height.px = 384, 
+        params.src = "mean, exercise = TRUE, exercise.cap = \"Mittelwert berechnen\"", 
+        fig.num = 0, exercise.df_print = "paged", exercise.checker = "NULL"), 
+    engine = "r", version = "4"), class = c("r", "tutorial_exercise"
+)))
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-dfmean-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-dfmean-code-editor`)), session)
+output$`tutorial-exercise-dfmean-output` <- renderUI({
+  `tutorial-exercise-dfmean-result`()
+})
+</script>
+
+
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::store_exercise_cache(structure(list(label = "dfmean", global_setup = structure(c("library(learnr)", 
+"library(rtutorials)", "library(shiny)", "", "# Learnr findet Tutorial-Dependencies automatisch heraus mittels renv::dependencies", 
+"# und fragt vor Tutorial-Start, ob fehlende Pakete installiert werden sollen. ", 
+"# Das ist für dieses Tutorial deaktiviert, da wir ein Paket von GitHub nutzen (ggbrace)", 
+"# Die automatische Dependency-Installation erlaubt nur CRAN. Leider habe ich ", 
+"# keinen besseren Weg gefunden als eine .renvignore -Datei im selben Verzeichnis", 
+"# Damit müssen alle Dependencies für dieses Tutorial manuell geprüft werden. ", 
+"", "if(!require(ggbrace, quietly = TRUE)){", "  message(\"\\nVersuche Paket 'ggbrace' von GitHub zu installieren. Benötigt eine Internetverbindung. \\nOhne dieses Paket funktioniert eine interaktive Grafik nicht.\")", 
+"  try(remotes::install_github(\"NicolasH2/ggbrace\"))", "  require(ggbrace)", 
+"}else{", "  require(ggbrace)", "}", "  ", "", "if(!require(scales)){", 
+"  message(\"Installiere fehlendes Paket...\")", "  try(install.packages(\"scales\"))", 
+"  require(scales)", "}else{", "  require(scales)", "}", "", 
+"library(ggplot2)", "", "if(!require(dplyr)){", "  message(\"Installiere fehlendes Paket...\")", 
+"  try(install.packages(\"dplyr\"))", "  require(dplyr)", "}else{", 
+"  require(dplyr)", "}", "", "if(!require(shinyFeedback, quietly = TRUE)){", 
+"  message(\"Installiere fehlendes Paket shinyFeedback\")", "  try(install.packages(\"shinyFeedback\"))}", 
+"", "knitr::opts_chunk$set(echo = FALSE)", "", "iq <- c(100, 103, 114, 85, 101, 91, 84, 103, 117, 102)", 
+""), chunk_opts = list(label = "setup", include = FALSE)), setup = NULL, 
+    chunks = list(list(label = "dfmean", code = "mean()", opts = list(
+        label = "\"dfmean\"", exercise = "TRUE", exercise.cap = "\"Mittelwert einer Tabellenspalte\""), 
+        engine = "r")), code_check = NULL, error_check = NULL, 
+    check = NULL, solution = structure("mean(einkaufen$alter) ", chunk_opts = list(
+        label = "dfmean-solution")), tests = NULL, options = list(
+        eval = FALSE, echo = TRUE, results = "markup", tidy = FALSE, 
+        tidy.opts = NULL, collapse = FALSE, prompt = FALSE, comment = NA, 
+        highlight = FALSE, size = "normalsize", background = "#F7F7F7", 
+        strip.white = TRUE, cache = 0, cache.path = "3_zentrale_tendenz_gesa_cache/html/", 
+        cache.vars = NULL, cache.lazy = TRUE, dependson = NULL, 
+        autodep = FALSE, cache.rebuild = FALSE, fig.keep = "high", 
+        fig.show = "asis", fig.align = "default", fig.path = "3_zentrale_tendenz_gesa_files/figure-html/", 
+        dev = "png", dev.args = NULL, dpi = 192, fig.ext = "png", 
+        fig.width = 6.5, fig.height = 4, fig.env = "figure", 
+        fig.cap = NULL, fig.scap = NULL, fig.lp = "fig:", fig.subcap = NULL, 
+        fig.pos = "", out.width = 624, out.height = NULL, out.extra = NULL, 
+        fig.retina = 2, external = TRUE, sanitize = FALSE, interval = 1, 
+        aniopts = "controls,loop", warning = TRUE, error = FALSE, 
+        message = TRUE, render = NULL, ref.label = NULL, child = NULL, 
+        engine = "r", split = FALSE, include = TRUE, purl = TRUE, 
+        max.print = 1000, label = "dfmean", exercise = TRUE, 
+        exercise.cap = "Mittelwert einer Tabellenspalte", code = "mean()", 
+        out.width.px = 624, out.height.px = 384, params.src = "dfmean, exercise = TRUE, exercise.cap = \"Mittelwert einer Tabellenspalte\"", 
+        fig.num = 0, exercise.df_print = "paged", exercise.checker = "NULL"), 
+    engine = "r", version = "4"), class = c("r", "tutorial_exercise"
+)))
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-narm-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-narm-code-editor`)), session)
+output$`tutorial-exercise-narm-output` <- renderUI({
+  `tutorial-exercise-narm-result`()
+})
+</script>
+
+
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::store_exercise_cache(structure(list(label = "narm", global_setup = structure(c("library(learnr)", 
+"library(rtutorials)", "library(shiny)", "", "# Learnr findet Tutorial-Dependencies automatisch heraus mittels renv::dependencies", 
+"# und fragt vor Tutorial-Start, ob fehlende Pakete installiert werden sollen. ", 
+"# Das ist für dieses Tutorial deaktiviert, da wir ein Paket von GitHub nutzen (ggbrace)", 
+"# Die automatische Dependency-Installation erlaubt nur CRAN. Leider habe ich ", 
+"# keinen besseren Weg gefunden als eine .renvignore -Datei im selben Verzeichnis", 
+"# Damit müssen alle Dependencies für dieses Tutorial manuell geprüft werden. ", 
+"", "if(!require(ggbrace, quietly = TRUE)){", "  message(\"\\nVersuche Paket 'ggbrace' von GitHub zu installieren. Benötigt eine Internetverbindung. \\nOhne dieses Paket funktioniert eine interaktive Grafik nicht.\")", 
+"  try(remotes::install_github(\"NicolasH2/ggbrace\"))", "  require(ggbrace)", 
+"}else{", "  require(ggbrace)", "}", "  ", "", "if(!require(scales)){", 
+"  message(\"Installiere fehlendes Paket...\")", "  try(install.packages(\"scales\"))", 
+"  require(scales)", "}else{", "  require(scales)", "}", "", 
+"library(ggplot2)", "", "if(!require(dplyr)){", "  message(\"Installiere fehlendes Paket...\")", 
+"  try(install.packages(\"dplyr\"))", "  require(dplyr)", "}else{", 
+"  require(dplyr)", "}", "", "if(!require(shinyFeedback, quietly = TRUE)){", 
+"  message(\"Installiere fehlendes Paket shinyFeedback\")", "  try(install.packages(\"shinyFeedback\"))}", 
+"", "knitr::opts_chunk$set(echo = FALSE)", "", "iq <- c(100, 103, 114, 85, 101, 91, 84, 103, 117, 102)", 
+""), chunk_opts = list(label = "setup", include = FALSE)), setup = NULL, 
+    chunks = list(list(label = "narm", code = "mean(einkaufen$alter)", 
+        opts = list(label = "\"narm\"", exercise = "TRUE", exercise.cap = "\"NAs entfernen\""), 
+        engine = "r")), code_check = NULL, error_check = NULL, 
+    check = NULL, solution = structure("mean(einkaufen$alter, na.rm = TRUE)", chunk_opts = list(
+        label = "narm-solution")), tests = NULL, options = list(
+        eval = FALSE, echo = TRUE, results = "markup", tidy = FALSE, 
+        tidy.opts = NULL, collapse = FALSE, prompt = FALSE, comment = NA, 
+        highlight = FALSE, size = "normalsize", background = "#F7F7F7", 
+        strip.white = TRUE, cache = 0, cache.path = "3_zentrale_tendenz_gesa_cache/html/", 
+        cache.vars = NULL, cache.lazy = TRUE, dependson = NULL, 
+        autodep = FALSE, cache.rebuild = FALSE, fig.keep = "high", 
+        fig.show = "asis", fig.align = "default", fig.path = "3_zentrale_tendenz_gesa_files/figure-html/", 
+        dev = "png", dev.args = NULL, dpi = 192, fig.ext = "png", 
+        fig.width = 6.5, fig.height = 4, fig.env = "figure", 
+        fig.cap = NULL, fig.scap = NULL, fig.lp = "fig:", fig.subcap = NULL, 
+        fig.pos = "", out.width = 624, out.height = NULL, out.extra = NULL, 
+        fig.retina = 2, external = TRUE, sanitize = FALSE, interval = 1, 
+        aniopts = "controls,loop", warning = TRUE, error = FALSE, 
+        message = TRUE, render = NULL, ref.label = NULL, child = NULL, 
+        engine = "r", split = FALSE, include = TRUE, purl = TRUE, 
+        max.print = 1000, label = "narm", exercise = TRUE, exercise.cap = "NAs entfernen", 
+        code = "mean(einkaufen$alter)", out.width.px = 624, out.height.px = 384, 
+        params.src = "narm, exercise = TRUE, exercise.cap = \"NAs entfernen\"", 
+        fig.num = 0, exercise.df_print = "paged", exercise.checker = "NULL"), 
+    engine = "r", version = "4"), class = c("r", "tutorial_exercise"
+)))
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::question_prerendered_chunk(structure(list(type = "learnr_numeric", label = "question_alter", 
+    question = structure("Was ist das durchschnittliche Alter im <code>einkaufen<\u002fcode>-Datensatz? (Auf eine ganze Zahl gerundet)", html = TRUE, class = c("html", 
+    "character")), answers = list(structure(list(id = "lnr_ans_dddd047", 
+        option = "43", value = 43, label = structure("43", html = TRUE, class = c("html", 
+        "character")), correct = TRUE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer"))), button_labels = list(submit = structure("<span data-i18n=\"button.questionsubmit\">Submit Answer<\u002fspan>", html = TRUE, class = c("html", 
+    "character")), try_again = structure("<span data-i18n=\"button.questiontryagain\">Try Again<\u002fspan>", html = TRUE, class = c("html", 
+    "character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html", 
+    "character")), try_again = structure("Incorrect", html = TRUE, class = c("html", 
+    "character")), incorrect = structure("Incorrect", html = TRUE, class = c("html", 
+    "character")), message = NULL, post_message = NULL), ids = list(
+        answer = "question_alter-answer", question = "question_alter"), 
+    loading = NULL, random_answer_order = FALSE, allow_retry = TRUE, 
+    seed = 905830360.07819, options = list(min = NA, max = NA, 
+        step = NA, tolerance = 0.5)), class = c("learnr_numeric", 
+"tutorial_question")), session = session)
+</script>
+
+
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-iq_proof-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-iq_proof-code-editor`)), session)
+output$`tutorial-exercise-iq_proof-output` <- renderUI({
+  `tutorial-exercise-iq_proof-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::store_exercise_cache(structure(list(label = "iq_proof", global_setup = structure(c("library(learnr)", 
+"library(rtutorials)", "library(shiny)", "", "# Learnr findet Tutorial-Dependencies automatisch heraus mittels renv::dependencies", 
+"# und fragt vor Tutorial-Start, ob fehlende Pakete installiert werden sollen. ", 
+"# Das ist für dieses Tutorial deaktiviert, da wir ein Paket von GitHub nutzen (ggbrace)", 
+"# Die automatische Dependency-Installation erlaubt nur CRAN. Leider habe ich ", 
+"# keinen besseren Weg gefunden als eine .renvignore -Datei im selben Verzeichnis", 
+"# Damit müssen alle Dependencies für dieses Tutorial manuell geprüft werden. ", 
+"", "if(!require(ggbrace, quietly = TRUE)){", "  message(\"\\nVersuche Paket 'ggbrace' von GitHub zu installieren. Benötigt eine Internetverbindung. \\nOhne dieses Paket funktioniert eine interaktive Grafik nicht.\")", 
+"  try(remotes::install_github(\"NicolasH2/ggbrace\"))", "  require(ggbrace)", 
+"}else{", "  require(ggbrace)", "}", "  ", "", "if(!require(scales)){", 
+"  message(\"Installiere fehlendes Paket...\")", "  try(install.packages(\"scales\"))", 
+"  require(scales)", "}else{", "  require(scales)", "}", "", 
+"library(ggplot2)", "", "if(!require(dplyr)){", "  message(\"Installiere fehlendes Paket...\")", 
+"  try(install.packages(\"dplyr\"))", "  require(dplyr)", "}else{", 
+"  require(dplyr)", "}", "", "if(!require(shinyFeedback, quietly = TRUE)){", 
+"  message(\"Installiere fehlendes Paket shinyFeedback\")", "  try(install.packages(\"shinyFeedback\"))}", 
+"", "knitr::opts_chunk$set(echo = FALSE)", "", "iq <- c(100, 103, 114, 85, 101, 91, 84, 103, 117, 102)", 
+""), chunk_opts = list(label = "setup", include = FALSE)), setup = NULL, 
+    chunks = list(list(label = "iq_proof", code = "# 1. Berechne Differenz jedes Werts vom Mittelwert\niq - mean(iq)\n\n# 2. Summiere alle Differenzen\nsum(iq - mean(iq))\n\n# 3. Prüfe ob das Ergebnis Null ist\n\nsum(iq - mean(iq)) == 0", 
+        opts = list(label = "\"iq_proof\"", exercise = "TRUE", 
+            exercise.cap = "\"Heben sich die Abweichungen auf?\""), 
+        engine = "r")), code_check = NULL, error_check = NULL, 
+    check = NULL, solution = NULL, tests = NULL, options = list(
+        eval = FALSE, echo = TRUE, results = "markup", tidy = FALSE, 
+        tidy.opts = NULL, collapse = FALSE, prompt = FALSE, comment = NA, 
+        highlight = FALSE, size = "normalsize", background = "#F7F7F7", 
+        strip.white = TRUE, cache = 0, cache.path = "3_zentrale_tendenz_gesa_cache/html/", 
+        cache.vars = NULL, cache.lazy = TRUE, dependson = NULL, 
+        autodep = FALSE, cache.rebuild = FALSE, fig.keep = "high", 
+        fig.show = "asis", fig.align = "default", fig.path = "3_zentrale_tendenz_gesa_files/figure-html/", 
+        dev = "png", dev.args = NULL, dpi = 192, fig.ext = "png", 
+        fig.width = 6.5, fig.height = 4, fig.env = "figure", 
+        fig.cap = NULL, fig.scap = NULL, fig.lp = "fig:", fig.subcap = NULL, 
+        fig.pos = "", out.width = 624, out.height = NULL, out.extra = NULL, 
+        fig.retina = 2, external = TRUE, sanitize = FALSE, interval = 1, 
+        aniopts = "controls,loop", warning = TRUE, error = FALSE, 
+        message = TRUE, render = NULL, ref.label = NULL, child = NULL, 
+        engine = "r", split = FALSE, include = TRUE, purl = TRUE, 
+        max.print = 1000, label = "iq_proof", exercise = TRUE, 
+        exercise.cap = "Heben sich die Abweichungen auf?", code = c("# 1. Berechne Differenz jedes Werts vom Mittelwert", 
+        "iq - mean(iq)", "", "# 2. Summiere alle Differenzen", 
+        "sum(iq - mean(iq))", "", "# 3. Prüfe ob das Ergebnis Null ist", 
+        "", "sum(iq - mean(iq)) == 0"), out.width.px = 624, out.height.px = 384, 
+        params.src = "iq_proof, exercise = TRUE, exercise.cap = \"Heben sich die Abweichungen auf?\"", 
+        fig.num = 0, exercise.df_print = "paged", exercise.checker = "NULL"), 
+    engine = "r", version = "4"), class = c("r", "tutorial_exercise"
+)))
+</script>
+
+
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-median-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-median-code-editor`)), session)
+output$`tutorial-exercise-median-output` <- renderUI({
+  `tutorial-exercise-median-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::store_exercise_cache(structure(list(label = "median", global_setup = structure(c("library(learnr)", 
+"library(rtutorials)", "library(shiny)", "", "# Learnr findet Tutorial-Dependencies automatisch heraus mittels renv::dependencies", 
+"# und fragt vor Tutorial-Start, ob fehlende Pakete installiert werden sollen. ", 
+"# Das ist für dieses Tutorial deaktiviert, da wir ein Paket von GitHub nutzen (ggbrace)", 
+"# Die automatische Dependency-Installation erlaubt nur CRAN. Leider habe ich ", 
+"# keinen besseren Weg gefunden als eine .renvignore -Datei im selben Verzeichnis", 
+"# Damit müssen alle Dependencies für dieses Tutorial manuell geprüft werden. ", 
+"", "if(!require(ggbrace, quietly = TRUE)){", "  message(\"\\nVersuche Paket 'ggbrace' von GitHub zu installieren. Benötigt eine Internetverbindung. \\nOhne dieses Paket funktioniert eine interaktive Grafik nicht.\")", 
+"  try(remotes::install_github(\"NicolasH2/ggbrace\"))", "  require(ggbrace)", 
+"}else{", "  require(ggbrace)", "}", "  ", "", "if(!require(scales)){", 
+"  message(\"Installiere fehlendes Paket...\")", "  try(install.packages(\"scales\"))", 
+"  require(scales)", "}else{", "  require(scales)", "}", "", 
+"library(ggplot2)", "", "if(!require(dplyr)){", "  message(\"Installiere fehlendes Paket...\")", 
+"  try(install.packages(\"dplyr\"))", "  require(dplyr)", "}else{", 
+"  require(dplyr)", "}", "", "if(!require(shinyFeedback, quietly = TRUE)){", 
+"  message(\"Installiere fehlendes Paket shinyFeedback\")", "  try(install.packages(\"shinyFeedback\"))}", 
+"", "knitr::opts_chunk$set(echo = FALSE)", "", "iq <- c(100, 103, 114, 85, 101, 91, 84, 103, 117, 102)", 
+""), chunk_opts = list(label = "setup", include = FALSE)), setup = NULL, 
+    chunks = list(list(label = "median", code = "iq", opts = list(
+        label = "\"median\"", exercise = "TRUE"), engine = "r")), 
+    code_check = NULL, error_check = NULL, check = NULL, solution = structure("median(iq)", chunk_opts = list(
+        label = "median-solution")), tests = NULL, options = list(
+        eval = FALSE, echo = TRUE, results = "markup", tidy = FALSE, 
+        tidy.opts = NULL, collapse = FALSE, prompt = FALSE, comment = NA, 
+        highlight = FALSE, size = "normalsize", background = "#F7F7F7", 
+        strip.white = TRUE, cache = 0, cache.path = "3_zentrale_tendenz_gesa_cache/html/", 
+        cache.vars = NULL, cache.lazy = TRUE, dependson = NULL, 
+        autodep = FALSE, cache.rebuild = FALSE, fig.keep = "high", 
+        fig.show = "asis", fig.align = "default", fig.path = "3_zentrale_tendenz_gesa_files/figure-html/", 
+        dev = "png", dev.args = NULL, dpi = 192, fig.ext = "png", 
+        fig.width = 6.5, fig.height = 4, fig.env = "figure", 
+        fig.cap = NULL, fig.scap = NULL, fig.lp = "fig:", fig.subcap = NULL, 
+        fig.pos = "", out.width = 624, out.height = NULL, out.extra = NULL, 
+        fig.retina = 2, external = TRUE, sanitize = FALSE, interval = 1, 
+        aniopts = "controls,loop", warning = TRUE, error = FALSE, 
+        message = TRUE, render = NULL, ref.label = NULL, child = NULL, 
+        engine = "r", split = FALSE, include = TRUE, purl = TRUE, 
+        max.print = 1000, label = "median", exercise = TRUE, 
+        code = "iq", out.width.px = 624, out.height.px = 384, 
+        params.src = "median, exercise = TRUE", fig.num = 0, 
+        exercise.df_print = "paged", exercise.checker = "NULL"), 
+    engine = "r", version = "4"), class = c("r", "tutorial_exercise"
+)))
+</script>
+
+
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-altermedian-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-altermedian-code-editor`)), session)
+output$`tutorial-exercise-altermedian-output` <- renderUI({
+  `tutorial-exercise-altermedian-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::store_exercise_cache(structure(list(label = "altermedian", global_setup = structure(c("library(learnr)", 
+"library(rtutorials)", "library(shiny)", "", "# Learnr findet Tutorial-Dependencies automatisch heraus mittels renv::dependencies", 
+"# und fragt vor Tutorial-Start, ob fehlende Pakete installiert werden sollen. ", 
+"# Das ist für dieses Tutorial deaktiviert, da wir ein Paket von GitHub nutzen (ggbrace)", 
+"# Die automatische Dependency-Installation erlaubt nur CRAN. Leider habe ich ", 
+"# keinen besseren Weg gefunden als eine .renvignore -Datei im selben Verzeichnis", 
+"# Damit müssen alle Dependencies für dieses Tutorial manuell geprüft werden. ", 
+"", "if(!require(ggbrace, quietly = TRUE)){", "  message(\"\\nVersuche Paket 'ggbrace' von GitHub zu installieren. Benötigt eine Internetverbindung. \\nOhne dieses Paket funktioniert eine interaktive Grafik nicht.\")", 
+"  try(remotes::install_github(\"NicolasH2/ggbrace\"))", "  require(ggbrace)", 
+"}else{", "  require(ggbrace)", "}", "  ", "", "if(!require(scales)){", 
+"  message(\"Installiere fehlendes Paket...\")", "  try(install.packages(\"scales\"))", 
+"  require(scales)", "}else{", "  require(scales)", "}", "", 
+"library(ggplot2)", "", "if(!require(dplyr)){", "  message(\"Installiere fehlendes Paket...\")", 
+"  try(install.packages(\"dplyr\"))", "  require(dplyr)", "}else{", 
+"  require(dplyr)", "}", "", "if(!require(shinyFeedback, quietly = TRUE)){", 
+"  message(\"Installiere fehlendes Paket shinyFeedback\")", "  try(install.packages(\"shinyFeedback\"))}", 
+"", "knitr::opts_chunk$set(echo = FALSE)", "", "iq <- c(100, 103, 114, 85, 101, 91, 84, 103, 117, 102)", 
+""), chunk_opts = list(label = "setup", include = FALSE)), setup = NULL, 
+    chunks = list(list(label = "altermedian", code = "median()", 
+        opts = list(label = "\"altermedian\"", exercise = "TRUE", 
+            exercise.cap = "\"Median einer Tabellenspalte\""), 
+        engine = "r")), code_check = NULL, error_check = NULL, 
+    check = NULL, solution = structure("median(einkaufen$alter)", chunk_opts = list(
+        label = "altermedian-solution")), tests = NULL, options = list(
+        eval = FALSE, echo = TRUE, results = "markup", tidy = FALSE, 
+        tidy.opts = NULL, collapse = FALSE, prompt = FALSE, comment = NA, 
+        highlight = FALSE, size = "normalsize", background = "#F7F7F7", 
+        strip.white = TRUE, cache = 0, cache.path = "3_zentrale_tendenz_gesa_cache/html/", 
+        cache.vars = NULL, cache.lazy = TRUE, dependson = NULL, 
+        autodep = FALSE, cache.rebuild = FALSE, fig.keep = "high", 
+        fig.show = "asis", fig.align = "default", fig.path = "3_zentrale_tendenz_gesa_files/figure-html/", 
+        dev = "png", dev.args = NULL, dpi = 192, fig.ext = "png", 
+        fig.width = 6.5, fig.height = 4, fig.env = "figure", 
+        fig.cap = NULL, fig.scap = NULL, fig.lp = "fig:", fig.subcap = NULL, 
+        fig.pos = "", out.width = 624, out.height = NULL, out.extra = NULL, 
+        fig.retina = 2, external = TRUE, sanitize = FALSE, interval = 1, 
+        aniopts = "controls,loop", warning = TRUE, error = FALSE, 
+        message = TRUE, render = NULL, ref.label = NULL, child = NULL, 
+        engine = "r", split = FALSE, include = TRUE, purl = TRUE, 
+        max.print = 1000, label = "altermedian", exercise = TRUE, 
+        exercise.cap = "Median einer Tabellenspalte", code = "median()", 
+        out.width.px = 624, out.height.px = 384, params.src = "altermedian, exercise = TRUE, exercise.cap = \"Median einer Tabellenspalte\"", 
+        fig.num = 0, exercise.df_print = "paged", exercise.checker = "NULL"), 
+    engine = "r", version = "4"), class = c("r", "tutorial_exercise"
+)))
+</script>
+
+
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::question_prerendered_chunk(structure(list(type = "learnr_numeric", label = "question_altermedian", 
+    question = structure("Was ist der Median des Alters im <code>einkaufen<\u002fcode>-Datensatz? (Auf eine Nachkommastelle)", html = TRUE, class = c("html", 
+    "character")), answers = list(structure(list(id = "lnr_ans_f011b4d", 
+        option = "40.5", value = 40.5, label = structure("40.5", html = TRUE, class = c("html", 
+        "character")), correct = TRUE, message = NULL, type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer"))), button_labels = list(submit = structure("<span data-i18n=\"button.questionsubmit\">Submit Answer<\u002fspan>", html = TRUE, class = c("html", 
+    "character")), try_again = structure("<span data-i18n=\"button.questiontryagain\">Try Again<\u002fspan>", html = TRUE, class = c("html", 
+    "character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html", 
+    "character")), try_again = structure("Incorrect", html = TRUE, class = c("html", 
+    "character")), incorrect = structure("Incorrect", html = TRUE, class = c("html", 
+    "character")), message = NULL, post_message = NULL), ids = list(
+        answer = "question_altermedian-answer", question = "question_altermedian"), 
+    loading = NULL, random_answer_order = FALSE, allow_retry = TRUE, 
+    seed = 1141781250.46832, options = list(min = NA, max = NA, 
+        step = NA, tolerance = 0.000000015)), class = c("learnr_numeric", 
+"tutorial_question")), session = session)
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-summary-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-summary-code-editor`)), session)
+output$`tutorial-exercise-summary-output` <- renderUI({
+  `tutorial-exercise-summary-result`()
+})
+</script>
+
+
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::store_exercise_cache(structure(list(label = "summary", global_setup = structure(c("library(learnr)", 
+"library(rtutorials)", "library(shiny)", "", "# Learnr findet Tutorial-Dependencies automatisch heraus mittels renv::dependencies", 
+"# und fragt vor Tutorial-Start, ob fehlende Pakete installiert werden sollen. ", 
+"# Das ist für dieses Tutorial deaktiviert, da wir ein Paket von GitHub nutzen (ggbrace)", 
+"# Die automatische Dependency-Installation erlaubt nur CRAN. Leider habe ich ", 
+"# keinen besseren Weg gefunden als eine .renvignore -Datei im selben Verzeichnis", 
+"# Damit müssen alle Dependencies für dieses Tutorial manuell geprüft werden. ", 
+"", "if(!require(ggbrace, quietly = TRUE)){", "  message(\"\\nVersuche Paket 'ggbrace' von GitHub zu installieren. Benötigt eine Internetverbindung. \\nOhne dieses Paket funktioniert eine interaktive Grafik nicht.\")", 
+"  try(remotes::install_github(\"NicolasH2/ggbrace\"))", "  require(ggbrace)", 
+"}else{", "  require(ggbrace)", "}", "  ", "", "if(!require(scales)){", 
+"  message(\"Installiere fehlendes Paket...\")", "  try(install.packages(\"scales\"))", 
+"  require(scales)", "}else{", "  require(scales)", "}", "", 
+"library(ggplot2)", "", "if(!require(dplyr)){", "  message(\"Installiere fehlendes Paket...\")", 
+"  try(install.packages(\"dplyr\"))", "  require(dplyr)", "}else{", 
+"  require(dplyr)", "}", "", "if(!require(shinyFeedback, quietly = TRUE)){", 
+"  message(\"Installiere fehlendes Paket shinyFeedback\")", "  try(install.packages(\"shinyFeedback\"))}", 
+"", "knitr::opts_chunk$set(echo = FALSE)", "", "iq <- c(100, 103, 114, 85, 101, 91, 84, 103, 117, 102)", 
+""), chunk_opts = list(label = "setup", include = FALSE)), setup = NULL, 
+    chunks = list(list(label = "summary", code = "iq", opts = list(
+        label = "\"summary\"", exercise = "TRUE"), engine = "r")), 
+    code_check = NULL, error_check = NULL, check = NULL, solution = structure("summary(iq)", chunk_opts = list(
+        label = "summary-solution")), tests = NULL, options = list(
+        eval = FALSE, echo = TRUE, results = "markup", tidy = FALSE, 
+        tidy.opts = NULL, collapse = FALSE, prompt = FALSE, comment = NA, 
+        highlight = FALSE, size = "normalsize", background = "#F7F7F7", 
+        strip.white = TRUE, cache = 0, cache.path = "3_zentrale_tendenz_gesa_cache/html/", 
+        cache.vars = NULL, cache.lazy = TRUE, dependson = NULL, 
+        autodep = FALSE, cache.rebuild = FALSE, fig.keep = "high", 
+        fig.show = "asis", fig.align = "default", fig.path = "3_zentrale_tendenz_gesa_files/figure-html/", 
+        dev = "png", dev.args = NULL, dpi = 192, fig.ext = "png", 
+        fig.width = 6.5, fig.height = 4, fig.env = "figure", 
+        fig.cap = NULL, fig.scap = NULL, fig.lp = "fig:", fig.subcap = NULL, 
+        fig.pos = "", out.width = 624, out.height = NULL, out.extra = NULL, 
+        fig.retina = 2, external = TRUE, sanitize = FALSE, interval = 1, 
+        aniopts = "controls,loop", warning = TRUE, error = FALSE, 
+        message = TRUE, render = NULL, ref.label = NULL, child = NULL, 
+        engine = "r", split = FALSE, include = TRUE, purl = TRUE, 
+        max.print = 1000, label = "summary", exercise = TRUE, 
+        code = "iq", out.width.px = 624, out.height.px = 384, 
+        params.src = "summary, exercise = TRUE", fig.num = 0, 
+        exercise.df_print = "paged", exercise.checker = "NULL"), 
+    engine = "r", version = "4"), class = c("r", "tutorial_exercise"
+)))
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-nominal-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-nominal-code-editor`)), session)
+output$`tutorial-exercise-nominal-output` <- renderUI({
+  `tutorial-exercise-nominal-result`()
+})
+</script>
+
+
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::store_exercise_cache(structure(list(label = "nominal", global_setup = structure(c("library(learnr)", 
+"library(rtutorials)", "library(shiny)", "", "# Learnr findet Tutorial-Dependencies automatisch heraus mittels renv::dependencies", 
+"# und fragt vor Tutorial-Start, ob fehlende Pakete installiert werden sollen. ", 
+"# Das ist für dieses Tutorial deaktiviert, da wir ein Paket von GitHub nutzen (ggbrace)", 
+"# Die automatische Dependency-Installation erlaubt nur CRAN. Leider habe ich ", 
+"# keinen besseren Weg gefunden als eine .renvignore -Datei im selben Verzeichnis", 
+"# Damit müssen alle Dependencies für dieses Tutorial manuell geprüft werden. ", 
+"", "if(!require(ggbrace, quietly = TRUE)){", "  message(\"\\nVersuche Paket 'ggbrace' von GitHub zu installieren. Benötigt eine Internetverbindung. \\nOhne dieses Paket funktioniert eine interaktive Grafik nicht.\")", 
+"  try(remotes::install_github(\"NicolasH2/ggbrace\"))", "  require(ggbrace)", 
+"}else{", "  require(ggbrace)", "}", "  ", "", "if(!require(scales)){", 
+"  message(\"Installiere fehlendes Paket...\")", "  try(install.packages(\"scales\"))", 
+"  require(scales)", "}else{", "  require(scales)", "}", "", 
+"library(ggplot2)", "", "if(!require(dplyr)){", "  message(\"Installiere fehlendes Paket...\")", 
+"  try(install.packages(\"dplyr\"))", "  require(dplyr)", "}else{", 
+"  require(dplyr)", "}", "", "if(!require(shinyFeedback, quietly = TRUE)){", 
+"  message(\"Installiere fehlendes Paket shinyFeedback\")", "  try(install.packages(\"shinyFeedback\"))}", 
+"", "knitr::opts_chunk$set(echo = FALSE)", "", "iq <- c(100, 103, 114, 85, 101, 91, 84, 103, 117, 102)", 
+""), chunk_opts = list(label = "setup", include = FALSE)), setup = NULL, 
+    chunks = list(list(label = "nominal", code = "", opts = list(
+        label = "\"nominal\"", exercise = "TRUE"), engine = "r")), 
+    code_check = NULL, error_check = NULL, check = NULL, solution = structure(c("farben <- factor(c(\"pink\", \"pink\", \"blau\", \"blau\", \"pink\", \"blau\", \"blau\", \"pink\", \"lila\", \"pink\"))", 
+    "", "summary(farben)"), chunk_opts = list(label = "nominal-solution")), 
+    tests = NULL, options = list(eval = FALSE, echo = TRUE, results = "markup", 
+        tidy = FALSE, tidy.opts = NULL, collapse = FALSE, prompt = FALSE, 
+        comment = NA, highlight = FALSE, size = "normalsize", 
+        background = "#F7F7F7", strip.white = TRUE, cache = 0, 
+        cache.path = "3_zentrale_tendenz_gesa_cache/html/", cache.vars = NULL, 
+        cache.lazy = TRUE, dependson = NULL, autodep = FALSE, 
+        cache.rebuild = FALSE, fig.keep = "high", fig.show = "asis", 
+        fig.align = "default", fig.path = "3_zentrale_tendenz_gesa_files/figure-html/", 
+        dev = "png", dev.args = NULL, dpi = 192, fig.ext = "png", 
+        fig.width = 6.5, fig.height = 4, fig.env = "figure", 
+        fig.cap = NULL, fig.scap = NULL, fig.lp = "fig:", fig.subcap = NULL, 
+        fig.pos = "", out.width = 624, out.height = NULL, out.extra = NULL, 
+        fig.retina = 2, external = TRUE, sanitize = FALSE, interval = 1, 
+        aniopts = "controls,loop", warning = TRUE, error = FALSE, 
+        message = TRUE, render = NULL, ref.label = NULL, child = NULL, 
+        engine = "r", split = FALSE, include = TRUE, purl = TRUE, 
+        max.print = 1000, label = "nominal", exercise = TRUE, 
+        code = "", out.width.px = 624, out.height.px = 384, params.src = "nominal, exercise = TRUE", 
+        fig.num = 0L, exercise.df_print = "paged", exercise.checker = "NULL"), 
+    engine = "r", version = "4"), class = c("r", "tutorial_exercise"
+)))
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-error-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-error-code-editor`)), session)
+output$`tutorial-exercise-error-output` <- renderUI({
+  `tutorial-exercise-error-result`()
+})
+</script>
+
+
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::store_exercise_cache(structure(list(label = "error", global_setup = structure(c("library(learnr)", 
+"library(rtutorials)", "library(shiny)", "", "# Learnr findet Tutorial-Dependencies automatisch heraus mittels renv::dependencies", 
+"# und fragt vor Tutorial-Start, ob fehlende Pakete installiert werden sollen. ", 
+"# Das ist für dieses Tutorial deaktiviert, da wir ein Paket von GitHub nutzen (ggbrace)", 
+"# Die automatische Dependency-Installation erlaubt nur CRAN. Leider habe ich ", 
+"# keinen besseren Weg gefunden als eine .renvignore -Datei im selben Verzeichnis", 
+"# Damit müssen alle Dependencies für dieses Tutorial manuell geprüft werden. ", 
+"", "if(!require(ggbrace, quietly = TRUE)){", "  message(\"\\nVersuche Paket 'ggbrace' von GitHub zu installieren. Benötigt eine Internetverbindung. \\nOhne dieses Paket funktioniert eine interaktive Grafik nicht.\")", 
+"  try(remotes::install_github(\"NicolasH2/ggbrace\"))", "  require(ggbrace)", 
+"}else{", "  require(ggbrace)", "}", "  ", "", "if(!require(scales)){", 
+"  message(\"Installiere fehlendes Paket...\")", "  try(install.packages(\"scales\"))", 
+"  require(scales)", "}else{", "  require(scales)", "}", "", 
+"library(ggplot2)", "", "if(!require(dplyr)){", "  message(\"Installiere fehlendes Paket...\")", 
+"  try(install.packages(\"dplyr\"))", "  require(dplyr)", "}else{", 
+"  require(dplyr)", "}", "", "if(!require(shinyFeedback, quietly = TRUE)){", 
+"  message(\"Installiere fehlendes Paket shinyFeedback\")", "  try(install.packages(\"shinyFeedback\"))}", 
+"", "knitr::opts_chunk$set(echo = FALSE)", "", "iq <- c(100, 103, 114, 85, 101, 91, 84, 103, 117, 102)", 
+""), chunk_opts = list(label = "setup", include = FALSE)), setup = NULL, 
+    chunks = list(list(label = "error", code = "farben <- c(\"pink\", \"pink\", \"blau\", \"blau\", \"pink\", \"blau\", \"blau\", \"pink\", \"lila\", \"pink\")\nsummary(farben)\ntable(farben)", 
+        opts = list(label = "\"error\"", exercise = "TRUE"), 
+        engine = "r")), code_check = NULL, error_check = NULL, 
+    check = NULL, solution = NULL, tests = NULL, options = list(
+        eval = FALSE, echo = TRUE, results = "markup", tidy = FALSE, 
+        tidy.opts = NULL, collapse = FALSE, prompt = FALSE, comment = NA, 
+        highlight = FALSE, size = "normalsize", background = "#F7F7F7", 
+        strip.white = TRUE, cache = 0, cache.path = "3_zentrale_tendenz_gesa_cache/html/", 
+        cache.vars = NULL, cache.lazy = TRUE, dependson = NULL, 
+        autodep = FALSE, cache.rebuild = FALSE, fig.keep = "high", 
+        fig.show = "asis", fig.align = "default", fig.path = "3_zentrale_tendenz_gesa_files/figure-html/", 
+        dev = "png", dev.args = NULL, dpi = 192, fig.ext = "png", 
+        fig.width = 6.5, fig.height = 4, fig.env = "figure", 
+        fig.cap = NULL, fig.scap = NULL, fig.lp = "fig:", fig.subcap = NULL, 
+        fig.pos = "", out.width = 624, out.height = NULL, out.extra = NULL, 
+        fig.retina = 2, external = TRUE, sanitize = FALSE, interval = 1, 
+        aniopts = "controls,loop", warning = TRUE, error = FALSE, 
+        message = TRUE, render = NULL, ref.label = NULL, child = NULL, 
+        engine = "r", split = FALSE, include = TRUE, purl = TRUE, 
+        max.print = 1000, label = "error", exercise = TRUE, code = c("farben <- c(\"pink\", \"pink\", \"blau\", \"blau\", \"pink\", \"blau\", \"blau\", \"pink\", \"lila\", \"pink\")", 
+        "summary(farben)", "table(farben)"), out.width.px = 624, 
+        out.height.px = 384, params.src = "error, exercise = TRUE", 
+        fig.num = 0, exercise.df_print = "paged", exercise.checker = "NULL"), 
+    engine = "r", version = "4"), class = c("r", "tutorial_exercise"
+)))
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::question_prerendered_chunk(structure(list(type = "learnr_text", label = "modequest", question = structure("Was ist die häufigste Lieblingsfarbe bei den 10 Studis?", html = TRUE, class = c("html", 
+"character")), answers = list(structure(list(id = "lnr_ans_42782a4", 
+    option = "pink", value = "pink", label = structure("pink", html = TRUE, class = c("html", 
+    "character")), correct = TRUE, message = structure("Genau, Pink kommt mit 5 mal am meisten vor.", html = TRUE, class = c("html", 
+    "character")), type = "literal"), class = c("tutorial_question_answer", 
+"tutorial_quiz_answer"))), button_labels = list(submit = structure("<span data-i18n=\"button.questionsubmit\">Submit Answer<\u002fspan>", html = TRUE, class = c("html", 
+"character")), try_again = structure("<span data-i18n=\"button.questiontryagain\">Try Again<\u002fspan>", html = TRUE, class = c("html", 
+"character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html", 
+"character")), try_again = structure("Incorrect", html = TRUE, class = c("html", 
+"character")), incorrect = structure("Incorrect", html = TRUE, class = c("html", 
+"character")), message = NULL, post_message = NULL), ids = list(
+    answer = "modequest-answer", question = "modequest"), loading = NULL, 
+    random_answer_order = FALSE, allow_retry = TRUE, seed = 807117634.124157, 
+    options = list(placeholder = "Enter answer here...", trim = TRUE)), class = c("learnr_text", 
+"tutorial_question")), session = session)
+</script>
+
+
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::question_prerendered_chunk(structure(list(type = "learnr_checkbox", label = "Abschlussquizz-1", 
+    question = structure("Was hast du über die Maße der zentralen Tendenz gelernt?", html = TRUE, class = c("html", 
+    "character")), answers = list(structure(list(id = "lnr_ans_3515e7d", 
+        option = "Der Median ist das Zentrum einer sortierten Datenmenge und weniger anfällig für Ausreißer.", 
+        value = "Der Median ist das Zentrum einer sortierten Datenmenge und weniger anfällig für Ausreißer.", 
+        label = structure("Der Median ist das Zentrum einer sortierten Datenmenge und weniger anfällig für Ausreißer.", html = TRUE, class = c("html", 
+        "character")), correct = TRUE, message = structure("Richtig! Der Median ist robust gegenüber Ausreißern.", html = TRUE, class = c("html", 
+        "character")), type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_66dd45d", 
+        option = "Der Median ist der Wert, der am häufigsten in einer Datenmenge vorkommt.", 
+        value = "Der Median ist der Wert, der am häufigsten in einer Datenmenge vorkommt.", 
+        label = structure("Der Median ist der Wert, der am häufigsten in einer Datenmenge vorkommt.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = structure("Der Modus nicht der Median repräsentiert den am häufigsten auftretenden Wert.", html = TRUE, class = c("html", 
+        "character")), type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_a288922", 
+        option = "Das arithmetische Mittel ist die Summe aller Werte geteilt durch die Anzahl der Werte.", 
+        value = "Das arithmetische Mittel ist die Summe aller Werte geteilt durch die Anzahl der Werte.", 
+        label = structure("Das arithmetische Mittel ist die Summe aller Werte geteilt durch die Anzahl der Werte.", html = TRUE, class = c("html", 
+        "character")), correct = TRUE, message = structure("Genau, der Mittelwert wird durch die Summe der Werte geteilt durch ihre Anzahl errechnet.", html = TRUE, class = c("html", 
+        "character")), type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer"))), button_labels = list(submit = structure("<span data-i18n=\"button.questionsubmit\">Submit Answer<\u002fspan>", html = TRUE, class = c("html", 
+    "character")), try_again = structure("<span data-i18n=\"button.questiontryagain\">Try Again<\u002fspan>", html = TRUE, class = c("html", 
+    "character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html", 
+    "character")), try_again = structure("Incorrect. Be sure to select every correct answer.", html = TRUE, class = c("html", 
+    "character")), incorrect = structure("Incorrect", html = TRUE, class = c("html", 
+    "character")), message = NULL, post_message = NULL), ids = list(
+        answer = "Abschlussquizz-1-answer", question = "Abschlussquizz-1"), 
+    loading = NULL, random_answer_order = FALSE, allow_retry = TRUE, 
+    seed = 235797126.390198, options = list()), class = c("learnr_checkbox", 
+"tutorial_question")), session = session)
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::question_prerendered_chunk(structure(list(type = "learnr_checkbox", label = "Abschlussquizz-2", 
+    question = structure("Welches Maß der zentralen Tendenz eignet sich für eine metrisch skalierte Variable mit großen Ausreißerwerten?", html = TRUE, class = c("html", 
+    "character")), answers = list(structure(list(id = "lnr_ans_f7f2f42", 
+        option = "Der Modus.", value = "Der Modus.", label = structure("Der Modus.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = structure("Du könntest auch den Modus für diese Variable bestimmen, aber du möchtest ja die eine Zahl finden, die deine Daten mit den geringsten Abweichungen beschreibt. Dafür die lediglich häufigste Ausprägung zu verwenden wäre also nicht zielführend.", html = TRUE, class = c("html", 
+        "character")), type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_fd1c061", 
+        option = "Der Median.", value = "Der Median.", label = structure("Der Median.", html = TRUE, class = c("html", 
+        "character")), correct = TRUE, message = structure("Richtig, der Median eignet sich gut dafür ein Maß der zentralen Tendenz zu bestimmen, dass gegen Ausreißer robust ist.", html = TRUE, class = c("html", 
+        "character")), type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_4173cb2", 
+        option = "Das arithmetische Mittel.", value = "Das arithmetische Mittel.", 
+        label = structure("Das arithmetische Mittel.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = structure("Das arithmetische Mittel gibt uns für Variablen OHNE Ausreißer eine gute Zusammenfassung unserer Daten, aber bei großen Ausreißern ist es anfällig für Verzerrungen.", html = TRUE, class = c("html", 
+        "character")), type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer"))), button_labels = list(submit = structure("<span data-i18n=\"button.questionsubmit\">Submit Answer<\u002fspan>", html = TRUE, class = c("html", 
+    "character")), try_again = structure("<span data-i18n=\"button.questiontryagain\">Try Again<\u002fspan>", html = TRUE, class = c("html", 
+    "character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html", 
+    "character")), try_again = structure("Incorrect. Be sure to select every correct answer.", html = TRUE, class = c("html", 
+    "character")), incorrect = structure("Incorrect", html = TRUE, class = c("html", 
+    "character")), message = NULL, post_message = NULL), ids = list(
+        answer = "Abschlussquizz-2-answer", question = "Abschlussquizz-2"), 
+    loading = NULL, random_answer_order = FALSE, allow_retry = TRUE, 
+    seed = 168562283.921507, options = list()), class = c("learnr_checkbox", 
+"tutorial_question")), session = session)
+</script>
+
+
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::question_prerendered_chunk(structure(list(type = "learnr_checkbox", label = "Abschlussquizz-3", 
+    question = structure("Welche Maße der zentralen Tendenz wären für eine ordinalskalierte Variable mit 6 Ausprägungen erlaubt zu berechnen (nicht unbedingt sinnvoll, aber erlaubt!)?", html = TRUE, class = c("html", 
+    "character")), answers = list(structure(list(id = "lnr_ans_525dd22", 
+        option = "Den Median.", value = "Den Median.", label = structure("Den Median.", html = TRUE, class = c("html", 
+        "character")), correct = TRUE, message = structure("Genau! Der Median eignet sich gut für eine mindestens ordinal skalierte Variable, da dieser den Wert in der Mitte des Datensatzes repräsentiert.", html = TRUE, class = c("html", 
+        "character")), type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_d3a1f58", 
+        option = "Den Modus.", value = "Den Modus.", label = structure("Den Modus.", html = TRUE, class = c("html", 
+        "character")), correct = TRUE, message = structure("Du dürftest vom Skalenniveau her auch den Modus für diese Variable bestimmen, es wäre also erlaubt, du verlierst dabei aber Information.", html = TRUE, class = c("html", 
+        "character")), type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_fb46699", 
+        option = "Das arithmetische Mittel.", value = "Das arithmetische Mittel.", 
+        label = structure("Das arithmetische Mittel.", html = TRUE, class = c("html", 
+        "character")), correct = TRUE, message = structure("Richtig, ab 5 Ausprägungen lässt sich auch der Mittelwert für ordinalskalierte Werte gut interpretieren.", html = TRUE, class = c("html", 
+        "character")), type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer"))), button_labels = list(submit = structure("<span data-i18n=\"button.questionsubmit\">Submit Answer<\u002fspan>", html = TRUE, class = c("html", 
+    "character")), try_again = structure("<span data-i18n=\"button.questiontryagain\">Try Again<\u002fspan>", html = TRUE, class = c("html", 
+    "character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html", 
+    "character")), try_again = structure("Incorrect. Be sure to select every correct answer.", html = TRUE, class = c("html", 
+    "character")), incorrect = structure("Incorrect", html = TRUE, class = c("html", 
+    "character")), message = NULL, post_message = NULL), ids = list(
+        answer = "Abschlussquizz-3-answer", question = "Abschlussquizz-3"), 
+    loading = NULL, random_answer_order = TRUE, allow_retry = TRUE, 
+    seed = 1207995647.93748, options = list()), class = c("learnr_checkbox", 
+"tutorial_question")), session = session)
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::question_prerendered_chunk(structure(list(type = "learnr_checkbox", label = "Abschlussquizz-4", 
+    question = structure("Welches Maß der zentralen Tendenz benutzt du für eine nominalskalierte Variable?", html = TRUE, class = c("html", 
+    "character")), answers = list(structure(list(id = "lnr_ans_46a1516", 
+        option = "Den Median.", value = "Den Median.", label = structure("Den Median.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = structure("Für den Median benötigst du eine mindestens ordinal skalierte Variable.", html = TRUE, class = c("html", 
+        "character")), type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_5ed8b58", 
+        option = "Den Modus.", value = "Den Modus.", label = structure("Den Modus.", html = TRUE, class = c("html", 
+        "character")), correct = TRUE, message = structure("Genau! Mit dem Modus kannst du den häufigsten Wert bestimmen.", html = TRUE, class = c("html", 
+        "character")), type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer")), structure(list(id = "lnr_ans_6ba575", 
+        option = "Das arithmetische Mittel.", value = "Das arithmetische Mittel.", 
+        label = structure("Das arithmetische Mittel.", html = TRUE, class = c("html", 
+        "character")), correct = FALSE, message = structure("Für die Berechnung des Mittelwert wird eine metrische Variable benötigt.", html = TRUE, class = c("html", 
+        "character")), type = "literal"), class = c("tutorial_question_answer", 
+    "tutorial_quiz_answer"))), button_labels = list(submit = structure("<span data-i18n=\"button.questionsubmit\">Submit Answer<\u002fspan>", html = TRUE, class = c("html", 
+    "character")), try_again = structure("<span data-i18n=\"button.questiontryagain\">Try Again<\u002fspan>", html = TRUE, class = c("html", 
+    "character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html", 
+    "character")), try_again = structure("Incorrect. Be sure to select every correct answer.", html = TRUE, class = c("html", 
+    "character")), incorrect = structure("Incorrect", html = TRUE, class = c("html", 
+    "character")), message = NULL, post_message = NULL), ids = list(
+        answer = "Abschlussquizz-4-answer", question = "Abschlussquizz-4"), 
+    loading = NULL, random_answer_order = FALSE, allow_retry = TRUE, 
+    seed = 766880192.642894, options = list()), class = c("learnr_checkbox", 
+"tutorial_question")), session = session)
+</script>
+
+
+<script type="application/shiny-prerendered" data-context="server">
+# Shiny App um die Anzahl richtig beantworteter Fragen anzuzeigen. 
+# Funktioniert in jedem Tutorial
+
+shiny::observeEvent(
+  input$get_score, 
+  {
+    objs2 = learnr:::get_tutorial_state()
+    
+    # Number of correct questions
+    
+    n_correct <- 
+      # Access the $correct sublist item in each list item
+        lapply(objs2, purrr::pluck, "correct") |>
+           # make it a vector containing: TRUE and FALSE and NAs
+           # NA is appearing for list items which don't have
+           # a $correct subitem
+                unlist() |> 
+           # Taking the sum of a logical Vector returns the number of TRUEs
+                sum(na.rm=TRUE)
+    
+    # Number of total questions
+    
+    total_questions <- 
+      # 1. Access $type in each list item and make it a vector of types
+      lapply(objs2, purrr::pluck, "type") |> unlist()
+    
+    # 2. Count the number of "question" in that vector
+    total_questions <- total_questions[total_questions == "question"] |> 
+      length()
+      
+      
+    output$score = shiny::renderText(
+      paste0(n_correct, " von ", total_questions,
+        " im gesamten Tutorial beantworteten Fragen waren richtig.")
+)
+    invisible()
+  }
+)
+</script>
+</p>
+<!--html_preserve-->
+<script type="application/shiny-prerendered" data-context="dependencies">
+{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["header-attrs"]},{"type":"character","attributes":{},"value":["2.25"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/pandoc"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["header-attrs.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.25"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["3.6.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/3.6.0"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery-3.6.0.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquerylib"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.1.4"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["bootstrap"]},{"type":"character","attributes":{},"value":["3.3.5"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/bootstrap"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["viewport"]}},"value":[{"type":"character","attributes":{},"value":["width=device-width, initial-scale=1"]}]},{"type":"character","attributes":{},"value":["js/bootstrap.min.js","shim/html5shiv.min.js","shim/respond.min.js"]},{"type":"character","attributes":{},"value":["css/cerulean.min.css"]},{"type":"character","attributes":{},"value":["<style>h1 {font-size: 34px;}\n       h1.title {font-size: 38px;}\n       h2 {font-size: 30px;}\n       h3 {font-size: 24px;}\n       h4 {font-size: 18px;}\n       h5 {font-size: 16px;}\n       h6 {font-size: 12px;}\n       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}\n       pre:not([class]) { background-color: white }<\/style>"]},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.25"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["pagedtable"]},{"type":"character","attributes":{},"value":["1.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/pagedtable-1.1"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["js/pagedtable.js"]},{"type":"character","attributes":{},"value":["css/pagedtable.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.25"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["highlightjs"]},{"type":"character","attributes":{},"value":["9.12.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/highlightjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["highlight.js"]},{"type":"character","attributes":{},"value":["textmate.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.25"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial"]},{"type":"character","attributes":{},"value":["0.11.5"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial.js"]},{"type":"character","attributes":{},"value":["tutorial.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.11.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["i18n"]},{"type":"character","attributes":{},"value":["21.6.10"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/i18n"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["i18next.min.js","tutorial-i18n-init.js"]},{"type":"NULL"},{"type":"character","attributes":{},"value":["<script id=\"i18n-cstm-trns\" type=\"application/json\">{\"language\":\"de\",\"resources\":{\"en\":{\"translation\":{\"button\":{\"runcode\":\"Run Code\",\"runcodetitle\":\"$t(button.runcode) ({{kbd}})\",\"hint\":\"Hint\",\"hint_plural\":\"Hints\",\"hinttitle\":\"$t(button.hint)\",\"hintnext\":\"Next Hint\",\"hintprev\":\"Previous Hint\",\"solution\":\"Solution\",\"solutiontitle\":\"$t(button.solution)\",\"copyclipboard\":\"Copy to Clipboard\",\"startover\":\"Start Over\",\"startovertitle\":\"$t(button.startover)\",\"continue\":\"Continue\",\"submitanswer\":\"Submit Answer\",\"submitanswertitle\":\"$t(button.submitanswer)\",\"previoustopic\":\"Previous Topic\",\"nexttopic\":\"Next Topic\",\"questionsubmit\":\"$t(button.submitanswer)\",\"questiontryagain\":\"Try Again\"},\"text\":{\"startover\":\"Start Over\",\"areyousure\":\"Are you sure you want to start over? (all exercise progress will be reset)\",\"youmustcomplete\":\"You must complete the\",\"exercise\":\"exercise\",\"exercise_plural\":\"exercises\",\"inthissection\":\"in this section before continuing.\",\"code\":\"Code\",\"enginecap\":\"{{engine}} $t(text.code)\",\"quiz\":\"Quiz\",\"blank\":\"blank\",\"blank_plural\":\"blanks\",\"exercisecontainsblank\":\"This exercise contains {{count}} $t(text.blank).\",\"pleasereplaceblank\":\"Please replace {{blank}} with valid code.\",\"unparsable\":\"It looks like this might not be valid R code. R cannot determine how to turn your text into a complete command. You may have forgotten to fill in a blank, to remove an underscore, to include a comma between arguments, or to close an opening <code>&quot;<\\/code>, <code>'<\\/code>, <code>(<\\/code> or <code>{<\\/code> with a matching <code>&quot;<\\/code>, <code>'<\\/code>, <code>)<\\/code> or <code>}<\\/code>.\\n\",\"unparsablequotes\":\"<p>It looks like your R code contains specially formatted quotation marks or &quot;curly&quot; quotes (<code>{{character}}<\\/code>) around character strings, making your code invalid. R requires character values to be contained in straight quotation marks (<code>&quot;<\\/code> or <code>'<\\/code>).<\\/p> {{code}} <p>Don't worry, this is a common source of errors when you copy code from another app that applies its own formatting to text. You can try replacing the code on that line with the following. There may be other places that need to be fixed, too.<\\/p> {{suggestion}}\\n\",\"unparsableunicode\":\"<p>It looks like your R code contains an unexpected special character (<code>{{character}}<\\/code>) that makes your code invalid.<\\/p> {{code}} <p>Sometimes your code may contain a special character that looks like a regular character, especially if you copy and paste the code from another app. Try deleting the special character from your code and retyping it manually.<\\/p>\\n\",\"unparsableunicodesuggestion\":\"<p>It looks like your R code contains an unexpected special character (<code>{{character}}<\\/code>) that makes your code invalid.<\\/p> {{code}} <p>Sometimes your code may contain a special character that looks like a regular character, especially if you copy and paste the code from another app. You can try replacing the code on that line with the following. There may be other places that need to be fixed, too.<\\/p> {{suggestion}}\\n\",\"and\":\"and\",\"or\":\"or\",\"listcomma\":\", \",\"oxfordcomma\":\",\"}}},\"fr\":{\"translation\":{\"button\":{\"runcode\":\"Lancer le Code\",\"runcodetitle\":\"$t(button.runcode) ({{kbd}})\",\"hint\":\"Indication\",\"hint_plural\":\"Indications\",\"hinttitle\":\"$t(button.hint)\",\"hintnext\":\"Indication Suivante\",\"hintprev\":\"Indication Précédente\",\"solution\":\"Solution\",\"solutiontitle\":\"$t(button.solution)\",\"copyclipboard\":\"Copier dans le Presse-papier\",\"startover\":\"Recommencer\",\"startovertitle\":\"$t(button.startover)\",\"continue\":\"Continuer\",\"submitanswer\":\"Soumettre\",\"submitanswertitle\":\"$t(button.submitanswer)\",\"previoustopic\":\"Chapitre Précédent\",\"nexttopic\":\"Chapitre Suivant\",\"questionsubmit\":\"$t(button.submitanswer)\",\"questiontryagain\":\"Réessayer\"},\"text\":{\"startover\":\"Recommencer\",\"areyousure\":\"Êtes-vous certains de vouloir recommencer? (La progression sera remise à zéro)\",\"youmustcomplete\":\"Vous devez d'abord compléter\",\"exercise\":\"l'exercice\",\"exercise_plural\":\"des exercices\",\"inthissection\":\"de cette section avec de continuer.\",\"code\":\"Code\",\"enginecap\":\"$t(text.code) {{engine}}\",\"quiz\":\"Quiz\",\"and\":\"et\",\"or\":\"ou\",\"oxfordcomma\":\"\"}}},\"es\":{\"translation\":{\"button\":{\"runcode\":\"Ejecutar código\",\"runcodetitle\":\"$t(button.runcode) ({{kbd}})\",\"hint\":\"Pista\",\"hint_plural\":\"Pistas\",\"hinttitle\":\"$t(button.hint)\",\"hintnext\":\"Siguiente pista\",\"hintprev\":\"Pista anterior\",\"solution\":\"Solución\",\"solutiontitle\":\"$t(button.solution)\",\"copyclipboard\":\"Copiar al portapapeles\",\"startover\":\"Reiniciar\",\"startovertitle\":\"$t(button.startover)\",\"continue\":\"Continuar\",\"submitanswer\":\"Enviar respuesta\",\"submitanswertitle\":\"$t(button.submitanswer)\",\"previoustopic\":\"Tema anterior\",\"nexttopic\":\"Tema siguiente\",\"questionsubmit\":\"$t(button.submitanswer)\",\"questiontryagain\":\"Volver a intentar\"},\"text\":{\"startover\":\"Reiniciar\",\"areyousure\":\"¿De verdad quieres empezar de nuevo? (todo el progreso del ejercicio se perderá)\",\"youmustcomplete\":\"Debes completar\",\"exercise\":\"el ejercicio\",\"exercise_plural\":\"los ejercicios\",\"inthissection\":\"en esta sección antes de continuar.\",\"code\":\"Código\",\"enginecap\":\"$t(text.code) {{engine}}\",\"quiz\":\"Cuestionario\",\"and\":\"y\",\"or\":\"o\",\"oxfordcomma\":\"\"}}},\"pt\":{\"translation\":{\"button\":{\"runcode\":\"Executar código\",\"runcodetitle\":\"$t(button.runcode) ({{kbd}})\",\"hint\":\"Dica\",\"hint_plural\":\"Dicas\",\"hinttitle\":\"$t(button.hint)\",\"hintnext\":\"Próxima dica\",\"hintprev\":\"Dica anterior\",\"solution\":\"Solução\",\"solutiontitle\":\"$t(button.solution)\",\"copyclipboard\":\"Copiar para a área de transferência\",\"startover\":\"Reiniciar\",\"startovertitle\":\"$t(button.startover)\",\"continue\":\"Continuar\",\"submitanswer\":\"Enviar resposta\",\"submitanswertitle\":\"$t(button.submitanswer)\",\"previoustopic\":\"Tópico anterior\",\"nexttopic\":\"Próximo tópico\",\"questionsubmit\":\"$t(button.submitanswer)\",\"questiontryagain\":\"Tentar novamente\"},\"text\":{\"startover\":\"Reiniciar\",\"areyousure\":\"Tem certeza que deseja começar novamente? (todo o progresso feito será perdido)\",\"youmustcomplete\":\"Você deve completar\",\"exercise\":\"o exercício\",\"exercise_plural\":\"os exercícios\",\"inthissection\":\"nesta seção antes de continuar.\",\"code\":\"Código\",\"enginecap\":\"$t(text.code) {{engine}}\",\"quiz\":\"Quiz\",\"and\":\"e\",\"or\":\"ou\",\"oxfordcomma\":\"\"}}},\"tr\":{\"translation\":{\"button\":{\"runcode\":\"Çalıştırma Kodu\",\"runcodetitle\":\"$t(button.runcode) ({{kbd}})\",\"hint\":\"Ipucu\",\"hint_plural\":\"İpuçları\",\"hinttitle\":\"$t(button.hint)\",\"hintnext\":\"Sonraki İpucu\",\"hintprev\":\"Önceki İpucu\",\"solution\":\"Çözüm\",\"solutiontitle\":\"$t(button.solution)\",\"copyclipboard\":\"Pano'ya Kopyala\",\"startover\":\"Baştan Başlamak\",\"startovertitle\":\"$t(button.startover)\",\"continue\":\"Devam et\",\"submitanswer\":\"Cevabı onayla\",\"submitanswertitle\":\"$t(button.submitanswer)\",\"previoustopic\":\"Önceki Konu\",\"nexttopic\":\"Sonraki Konu\",\"questionsubmit\":\"$t(button.submitanswer)\",\"questiontryagain\":\"Tekrar Deneyin\"},\"text\":{\"startover\":\"Baştan Başlamak\",\"areyousure\":\"Baştan başlamak istediğinizden emin misiniz? (tüm egzersiz ilerlemesi kaybolacak)\",\"youmustcomplete\":\"Tamamlamalısın\",\"exercise\":\"egzersiz\",\"exercise_plural\":\"egzersizler\",\"inthissection\":\"devam etmeden önce bu bölümde\",\"code\":\"Kod\",\"enginecap\":\"$t(text.code) {{engine}}\",\"quiz\":\"Sınav\",\"oxfordcomma\":\"\"}}},\"emo\":{\"translation\":{\"button\":{\"runcode\":\"🏃\",\"runcodetitle\":\"$t(button.runcode) ({{kbd}})\",\"hint\":\"💡\",\"hint_plural\":\"$t(button.hint)\",\"hinttitle\":\"$t(button.hint)\",\"solution\":\"🎯\",\"solutiontitle\":\"$t(button.solution)\",\"copyclipboard\":\"📋\",\"startover\":\"⏮\",\"startovertitle\":\"Start Over\",\"continue\":\"✅\",\"submitanswer\":\"🆗\",\"submitanswertitle\":\"Submit Answer\",\"previoustopic\":\"⬅\",\"nexttopic\":\"➡\",\"questionsubmit\":\"$t(button.submitanswer)\",\"questiontryagain\":\"🔁\"},\"text\":{\"startover\":\"⏮\",\"areyousure\":\"🤔\",\"youmustcomplete\":\"⚠️ 👉 🧑‍💻\",\"exercise\":\"\",\"exercise_plural\":\"\",\"inthissection\":\"\",\"code\":\"💻\",\"enginecap\":\"$t(text.code) {{engine}}\",\"oxfordcomma\":\"\"}}},\"eu\":{\"translation\":{\"button\":{\"runcode\":\"Kodea egikaritu\",\"runcodetitle\":\"$t(button.runcode) ({{kbd}})\",\"hint\":\"Laguntza\",\"hint_plural\":\"Laguntza\",\"hinttitle\":\"$t(button.hint)\",\"hintnext\":\"Aurreko laguntza\",\"hintprev\":\"Hurrengo laguntza\",\"solution\":\"Ebazpena\",\"solutiontitle\":\"$t(button.solution)\",\"copyclipboard\":\"Arbelean kopiatu\",\"startover\":\"Berrabiarazi\",\"startovertitle\":\"$t(button.startover)\",\"continue\":\"Jarraitu\",\"submitanswer\":\"Erantzuna bidali\",\"submitanswertitle\":\"$t(button.submitanswer)\",\"previoustopic\":\"Aurreko atala\",\"nexttopic\":\"Hurrengo atala\",\"questionsubmit\":\"$t(button.submitanswer)\",\"questiontryagain\":\"Berriro saiatu\"},\"text\":{\"startover\":\"Berrabiarazi\",\"areyousure\":\"Berriro hasi nahi duzu? (egindako lana galdu egingo da)\",\"youmustcomplete\":\"Aurrera egin baino lehen atal honetako\",\"exercise\":\"ariketa egin behar duzu.\",\"exercise_plural\":\"ariketak egin behar dituzu.\",\"inthissection\":\"\",\"code\":\"Kodea\",\"enginecap\":\"$t(text.code) {{engine}}\",\"quiz\":\"Galdetegia\",\"oxfordcomma\":\"\"}}},\"de\":{\"translation\":{\"button\":{\"runcode\":\"Code ausführen\",\"runcodetitle\":\"$t(button.runcode) ({{kbd}})\",\"hint\":\"Tipp\",\"hint_plural\":\"Tipps\",\"hinttitle\":\"$t(button.hint)\",\"hintnext\":\"Nächster Tipp\",\"hintprev\":\"Vorheriger Tipp\",\"solution\":\"Lösung\",\"solutiontitle\":\"$t(button.solution)\",\"copyclipboard\":\"In die Zwischenablage kopieren\",\"startover\":\"Neustart\",\"startovertitle\":\"$t(button.startover)\",\"continue\":\"Weiter\",\"submitanswer\":\"Antwort einreichen\",\"submitanswertitle\":\"$t(button.submitanswer)\",\"previoustopic\":\"Vorheriges Kapitel\",\"nexttopic\":\"Nächstes Kapitel\",\"questionsubmit\":\"$t(button.submitanswer)\",\"questiontryagain\":\"Nochmal versuchen\"},\"text\":{\"startover\":\"Neustart\",\"areyousure\":\"Bist du sicher, dass du neustarten willst? (der gesamte Lernfortschritt wird gelöscht)\",\"youmustcomplete\":\"Vervollstädinge\",\"exercise\":\"die Übung\",\"exercise_plural\":\"die Übungen\",\"inthissection\":\"in diesem Kapitel, bevor du fortfährst.\",\"code\":\"Code\",\"enginecap\":\"$t(text.code) {{engine}}\",\"quiz\":\"Quiz\",\"blank\":\"Lücke\",\"blank_plural\":\"Lücken\",\"pleasereplaceblank\":\"Bitte ersetze {{blank}} mit gültigem Code.\",\"unparsable\":\"Dies scheint kein gültiger R Code zu sein. R kann deinen Text nicht in einen gültigen Befehl übersetzen. Du hast vielleicht vergessen, die Lücke zu füllen, einen Unterstrich zu entfernen, ein Komma zwischen Argumente zu setzen oder ein eröffnendes <code>&quot;<\\/code>, <code>'<\\/code>, <code>(<\\/code> oder <code>{<\\/code> mit einem zugehörigen <code>&quot;<\\/code>, <code>'<\\/code>, <code>)<\\/code> oder <code>}<\\/code> zu schließen.\\n\",\"and\":\"und\",\"or\":\"oder\",\"listcomma\":\", \",\"oxfordcomma\":\",\"}}},\"ko\":{\"translation\":{\"button\":{\"runcode\":\"코드 실행\",\"runcodetitle\":\"$t(button.runcode) ({{kbd}})\",\"hint\":\"힌트\",\"hint_plural\":\"힌트들\",\"hinttitle\":\"$t(button.hint)\",\"hintnext\":\"다음 힌트\",\"hintprev\":\"이전 힌트\",\"solution\":\"솔루션\",\"solutiontitle\":\"$t(button.solution)\",\"copyclipboard\":\"클립보드에 복사\",\"startover\":\"재학습\",\"startovertitle\":\"$t(button.startover)\",\"continue\":\"다음 학습으로\",\"submitanswer\":\"정답 제출\",\"submitanswertitle\":\"$t(button.submitanswer)\",\"previoustopic\":\"이전 토픽\",\"nexttopic\":\"다음 토픽\",\"questionsubmit\":\"$t(button.submitanswer)\",\"questiontryagain\":\"재시도\"},\"text\":{\"startover\":\"재학습\",\"areyousure\":\"다시 시작 하시겠습니까? (모든 예제의 진행 정보가 재설정됩니다)\",\"youmustcomplete\":\"당신은 완료해야 합니다\",\"exercise\":\"연습문제\",\"exercise_plural\":\"연습문제들\",\"inthissection\":\"이 섹션을 실행하기 전에\",\"code\":\"코드\",\"enginecap\":\"$t(text.code) {{engine}}\",\"quiz\":\"퀴즈\",\"blank\":\"공백\",\"blank_plural\":\"공백들\",\"exercisecontainsblank\":\"이 연습문제에는 {{count}}개의 $t(text.blank)이 포함되어 있습니다.\",\"pleasereplaceblank\":\"{{blank}}를 유효한 코드로 바꾸십시오.\",\"unparsable\":\"이것은 유효한 R 코드가 아닐 수 있습니다. R은 텍스트를 완전한 명령으로 변환하는 방법을 결정할 수 없습니다. 당신은 공백이나 밑줄을 대체하여 채우기, 인수를 컴마로 구분하기, 또는 <code>&quot;<\\/code>, <code>'<\\/code>, <code>(<\\/code> , <code>{<\\/code>로 시작하는 구문을 닫는 <code>&quot;<\\/code>, <code>'<\\/code>, <code>)<\\/code>, <code>}<\\/code>을 잊었을 수도 있습니다.\\n\",\"and\":\"그리고\",\"or\":\"혹은\",\"listcomma\":\", \",\"oxfordcomma\":\"\"}}},\"zh\":{\"translation\":{\"button\":{\"runcode\":\"运行代码\",\"runcodetitle\":\"$t(button.runcode) ({{kbd}})\",\"hint\":\"提示\",\"hint_plural\":\"提示\",\"hinttitle\":\"$t(button.hint)\",\"hintnext\":\"下一个提示\",\"hintprev\":\"上一个提示\",\"solution\":\"答案\",\"solutiontitle\":\"$t(button.solution)\",\"copyclipboard\":\"复制到剪切板\",\"startover\":\"重新开始\",\"startovertitle\":\"$t(button.startover)\",\"continue\":\"继续\",\"submitanswer\":\"提交答案\",\"submitanswertitle\":\"$t(button.submitanswer)\",\"previoustopic\":\"上一专题\",\"nexttopic\":\"下一专题\",\"questionsubmit\":\"$t(button.submitanswer)\",\"questiontryagain\":\"再试一次\"},\"text\":{\"startover\":\"重置\",\"areyousure\":\"你确定要重新开始吗? (所有当前进度将被重置)\",\"youmustcomplete\":\"你必须完成\",\"exercise\":\"练习\",\"exercise_plural\":\"练习\",\"inthissection\":\"在进行本节之前\",\"code\":\"代码\",\"enginecap\":\"$t(text.code) {{engine}}\",\"quiz\":\"测试\",\"blank\":\"空\",\"blank_plural\":\"空\",\"exercisecontainsblank\":\"本练习包含{{count}}个$t(text.blank)\",\"pleasereplaceblank\":\"请在{{blank}}内填写恰当的代码\",\"unparsable\":\"这似乎不是有效的R代码。 R不知道如何将您的文本转换为完整的命令。 您是否忘了填空，忘了删除下划线，忘了在参数之间包含逗号，或者是忘了用<code>&quot;<\\/code>, <code>'<\\/code>, <code>)<\\/code>,<code>}<\\/code>来封闭<code>&quot;<\\/code>, <code>'<\\/code>, <code>(<\\/code>。 or <code>{<\\/code>。\\n\",\"unparsablequotes\":\"<p>您的R代码中似乎含有特殊格式的引号，或者弯引号(<code>{{character}}<\\/code>) 在字符串前后，在R中字符串应该被直引号(<code>&quot;<\\/code> 或者 <code>'<\\/code>)包裹。<\\/p> {{code}} <p>别担心，该错误经常在复制粘贴包含格式的代码时遇到， 您可以尝试将该行中的代码替换为以下代码，也许还有其他地方需要修改。<\\/p> {{suggestion}}\\n\",\"unparsableunicode\":\"<p>您的代码中似乎包含有异常字符(<code>{{character}}<\\/code>),导致代码无效。<\\/p> {{code}} <p>有时候你的代码可能含有看似正常字符的特殊字符，特别是当你复制粘贴其他来源代码的时候。 请试着删除这些特殊字符,重新输入<\\/p>\\n\",\"unparsableunicodesuggestion\":\"<p>您的代码中似乎包含有异常字符(<code>{{character}}<\\/code>),导致代码无效。<\\/p> {{code}} <p>有时候你的代码可能含有看似正常字符的特殊字符，特别是当你复制粘贴其他来源代码的时候。 请试着删除这些特殊字符,重新输入<\\/p>\\n\",\"and\":\"且\",\"or\":\"或\",\"listcomma\":\",\",\"oxfordcomma\":\",\"}}},\"pl\":{\"translation\":{\"button\":{\"runcode\":\"Uruchom kod\",\"runcodetitle\":\"$t(button.runcode) ({{kbd}})\",\"hint\":\"Podpowiedź\",\"hint_plural\":\"Podpowiedzi\",\"hinttitle\":\"$t(button.hint)\",\"hintnext\":\"Następna podpowiedź\",\"hintprev\":\"Poprzednia podpowiedź\",\"solution\":\"Rozwiązanie\",\"solutiontitle\":\"$t(button.solution)\",\"copyclipboard\":\"Kopiuj do schowka\",\"startover\":\"Zacznij od początku\",\"startovertitle\":\"$t(button.startover)\",\"continue\":\"Kontynuuj\",\"submitanswer\":\"Wyślij\",\"submitanswertitle\":\"$t(button.submitanswer)\",\"previoustopic\":\"Poprzednia sekcja\",\"nexttopic\":\"Następna sekcja\",\"questionsubmit\":\"$t(button.submitanswer)\",\"questiontryagain\":\"Spróbuj ponownie\"},\"text\":{\"startover\":\"Zacznij od początku\",\"areyousure\":\"Czy na pewno chcesz zacząć od początku? (cały postęp w zadaniu zostanie utracony)\",\"youmustcomplete\":\"Musisz ukończyć\",\"exercise\":\"ćwiczenie\",\"exercise_plural\":\"ćwiczenia\",\"inthissection\":\"w tej sekcji przed kontynuowaniem\",\"code\":\"Kod\",\"enginecap\":\"$t(text.code) {{engine}}\",\"quiz\":\"Quiz\",\"blank\":\"luka\",\"blank_plural\":\"luk(i)\",\"exercisecontainsblank\":\"To ćwiczenie zawiera {{count}} $t(text.blank).\",\"pleasereplaceblank\":\"Proszę uzupełnić {{blank}} prawidłowym kodem.\",\"unparsable\":\"Wygląda na to, że może to nie być prawidłowy kod R. R nie jest w stanie przetworzyć Twojego tekstu na polecenie. Mogłeś(-aś) zapomnieć wypełnić luki, usunąć podkreślnik, umieścić przecinka między argumentami, lub zamknąć znak <code>&quot;<\\/code>, <code>'<\\/code>, <code>(<\\/code> lub <code>{<\\/code> odpowiadającym <code>&quot;<\\/code>, <code>'<\\/code>, <code>)<\\/code> lub <code>}<\\/code>.\\n\",\"unparsablequotes\":\"<p>Wygląda na to, że Twój kod zawiera szczególnie sformatowane cudzysłowy lub cudzysłowy typograficzne (<code>{{character}}<\\/code>) przy ciągach znaków, co sprawia, że kod jest niepoprawny. R wymaga cudzysłowów prostych (<code>&quot;<\\/code> albo <code>'<\\/code>).<\\/p> {{code}} <p>Nie martw się, to powszechne źródło błędów, gdy kopiuje się kod z innego programu, który sam formatuje teskt. Możesz spróbować zastąpić swój kod następującym kodem. Mogą być też inne miejsca, które wymagają poprawienia.<\\/p> {{suggestion}}\\n\",\"unparsableunicode\":\"<p>Wygląda na to, że Twój kod zawiera niespodziewany znak specjalny (<code>{{character}}<\\/code>), co sprawia, że kod jest niepoprawny.<\\/p> {{code}} <p>Czasami Twój kod może zawierać znak specjalny, który wygląda jak zwykły znak, zwłaszcza jeśli kopiujesz kod z innego programu. Spróbuj usunąć znak specjalny i wpisać do ponownie ręcznie.<\\/p>\\n\",\"unparsableunicodesuggestion\":\"<p>Wygląda na to, że Twój kod zawiera niespodziewany znak specjalny (<code>{{character}}<\\/code>), co sprawia, że kod jest niepoprawny.<\\/p> {{code}} <p>Czasami Twój kod może zawierać znak specjalny, który wygląda jak zwykły znak, zwłaszcza jeśli kopiujesz kod z innego programu. Możesz spróbować zastąpić swój kod następującym kodem. Mogą być też inne miejsca, które wymagają poprawienia.<\\/p> {{suggestion}}\\n\",\"and\":\"i\",\"or\":\"lub\",\"listcomma\":\", \",\"oxfordcomma\":\"\"}}}}}<\/script>"]},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.11.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial-format"]},{"type":"character","attributes":{},"value":["0.11.5"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmarkdown/templates/tutorial/resources"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial-format.js"]},{"type":"character","attributes":{},"value":["tutorial-format.css","rstudio-theme.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.11.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["3.6.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/3.6.0"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery-3.6.0.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquerylib"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.1.4"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["navigation"]},{"type":"character","attributes":{},"value":["1.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/navigation-1.1"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tabsets.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.25"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["highlightjs"]},{"type":"character","attributes":{},"value":["9.12.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["rmd/h/highlightjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["highlight.js"]},{"type":"character","attributes":{},"value":["default.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["rmarkdown"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["2.25"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["3.6.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/3.6.0"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery-3.6.0.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquerylib"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.1.4"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["font-awesome"]},{"type":"character","attributes":{},"value":["6.4.2"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["fontawesome"]}]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["css/all.min.css","css/v4-shims.min.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["fontawesome"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.5.2"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["bootbox"]},{"type":"character","attributes":{},"value":["5.5.2"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/bootbox"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["bootbox.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.11.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["idb-keyvalue"]},{"type":"character","attributes":{},"value":["3.2.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/idb-keyval"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["idb-keyval-iife-compat.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[false]},{"type":"character","attributes":{},"value":["0.11.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["tutorial"]},{"type":"character","attributes":{},"value":["0.11.5"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/tutorial"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["tutorial.js"]},{"type":"character","attributes":{},"value":["tutorial.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.11.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["jquery"]},{"type":"character","attributes":{},"value":["3.6.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["www/shared"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["jquery.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["shiny"]},{"type":"logical","attributes":{},"value":[false]},{"type":"character","attributes":{},"value":["1.8.0"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["feedback"]},{"type":"character","attributes":{},"value":["0.4.0"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["assets"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["js/shinyfeedback.js"]},{"type":"character","attributes":{},"value":["css/shinyfeedback.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["shinyFeedback"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.4.0"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["font-awesome"]},{"type":"character","attributes":{},"value":["6.4.2"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["fontawesome"]}]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["css/all.min.css","css/v4-shims.min.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["fontawesome"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.5.2"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["toastr"]},{"type":"character","attributes":{},"value":["2.1.4"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["assets/toastr"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["js/toastr.min.js","js/shinytoastr.js"]},{"type":"character","attributes":{},"value":["css/toastr.min.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["shinyFeedback"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.4.0"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ionrangeslider-javascript"]},{"type":"character","attributes":{},"value":["2.3.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["www/shared/ionrangeslider"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["js/ion.rangeSlider.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["shiny"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["1.8.0"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["strftime"]},{"type":"character","attributes":{},"value":["0.9.2"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["www/shared/strftime"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["strftime-min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["shiny"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["1.8.0"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ionrangeslider-css"]},{"type":"character","attributes":{},"value":["2.3.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["www/shared/ionrangeslider"]}]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["css/ion.rangeSlider.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["shiny"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["1.8.0"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["bootstrap"]},{"type":"character","attributes":{},"value":["3.4.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["www/shared/bootstrap"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["viewport"]}},"value":[{"type":"character","attributes":{},"value":["width=device-width, initial-scale=1"]}]},{"type":"character","attributes":{},"value":["js/bootstrap.min.js","accessibility/js/bootstrap-accessibility.min.js"]},{"type":"character","attributes":{},"value":["css/bootstrap.min.css","accessibility/css/bootstrap-accessibility.min.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["shiny"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["1.8.0"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.10.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.11.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["2.0.10"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.11.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.10.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.11.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["2.0.10"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.11.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.10.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.11.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["2.0.10"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.11.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.10.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.11.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["2.0.10"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.11.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.10.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.11.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["2.0.10"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.11.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.10.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.11.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["2.0.10"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.11.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.10.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.11.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["2.0.10"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.11.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.10.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.11.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["2.0.10"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.11.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ace"]},{"type":"character","attributes":{},"value":["1.10.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/ace"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["ace.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.11.5"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["clipboardjs"]},{"type":"character","attributes":{},"value":["2.0.10"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["lib/clipboardjs"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["clipboard.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["learnr"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["0.11.5"]}]}]}
+</script>
+<!--/html_preserve-->
+<!--html_preserve-->
+<script type="application/shiny-prerendered" data-context="execution_dependencies">
+{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["packages"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["packages","version"]},"class":{"type":"character","attributes":{},"value":["data.frame"]},"row.names":{"type":"integer","attributes":{},"value":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146]}},"value":[{"type":"character","attributes":{},"value":["abind","backports","base","boot","broom","bslib","cachem","callr","car","carData","checkmate","cli","clue","cluster","codetools","colorspace","commonmark","compiler","cowsay","crayon","curl","datasets","desc","devtools","digest","dplyr","ellipsis","evaluate","fansi","farver","fastmap","fBasics","fontawesome","forcats","foreach","fortunes","fs","generics","ggbrace","ggplot2","glmnet","glue","graphics","grDevices","grid","gtable","haven","highr","hms","htmltools","htmlwidgets","httpuv","httr","iterators","jomo","jquerylib","jsonlite","knitr","labeling","later","lattice","learnr","lifecycle","lme4","lubridate","magrittr","markdown","MASS","Matrix","memoise","methods","mice","mime","miniUI","minqa","mitml","mnormt","modeest","munsell","nlme","nloptr","nnet","nycflights13","pan","parallel","pillar","pkgbuild","pkgconfig","pkgload","prettyunits","processx","profvis","promises","ps","psych","purrr","R6","rappdirs","Rcpp","readr","remotes","renv","rlang","rmarkdown","rmsfact","rmutil","rpart","rprojroot","rsconnect","rstudioapi","rtutorials","rvest","sass","scales","sessioninfo","shape","shiny","shinyFeedback","spatial","splines","stable","stabledist","statip","stats","stringi","stringr","survival","tibble","tidyr","tidyselect","tidyverse","timechange","timeDate","timeSeries","tools","tzdb","urlchecker","usethis","utf8","utils","vctrs","withr","xfun","xml2","xtable","yaml"]},{"type":"character","attributes":{},"value":["1.4-5","1.4.1","4.3.2","1.3-28.1","1.0.5","0.6.1","1.0.8","3.7.3","3.1-2","3.0-5","2.3.1","3.6.1","0.3-65","2.1.4","0.2-19","2.1-0","1.9.0","4.3.2","0.9.0","1.5.2","5.1.0","4.3.2","1.4.2","2.4.5","0.6.33","1.1.4","0.3.2","0.23","1.0.5","2.1.1","1.1.1","4032.96","0.5.2","1.0.0","1.5.2","1.5-4","1.6.3","0.1.3","0.1.0","3.4.4","4.1-8","1.6.2","4.3.2","4.3.2","4.3.2","0.3.4","2.5.4","0.10","1.1.3","0.5.7","1.6.4","1.6.13","1.4.7","1.0.14","2.7-6","0.1.4","1.8.8","1.45","0.4.3","1.3.2","0.21-9","0.11.5","1.0.4","1.1-35.1","1.9.3","2.0.3","1.12","7.3-60","1.6-1.1","2.0.1","4.3.2","3.16.0","0.12","0.1.1.1","1.2.6","0.4-5","2.1.1","2.4.0","0.5.0","3.1-163","2.0.3","7.3-19","1.0.2","1.9","4.3.2","1.9.0","1.4.2","2.0.3","1.3.3","1.2.0","3.8.2","0.3.8","1.2.1","1.7.5","2.3.9","1.0.2","2.5.1","0.3.3","1.0.11","2.1.4","2.4.2.1","1.0.3","1.1.2","2.25","0.0.3","1.1.10","4.1.21","2.0.4","1.1.1","0.15.0","0.1.0","1.0.3","0.4.8","1.3.0","1.2.2","1.4.6","1.8.0","0.4.0","7.3-17","4.3.2","1.1.6","0.7-1","0.2.3","4.3.2","1.8.3","1.5.1","3.5-7","3.2.1","1.3.0","1.2.0","2.0.0","0.2.0","4032.109","4032.108","4.3.2","0.4.0","1.0.1","2.2.2","1.2.4","4.3.2","0.6.5","2.5.2","0.41","1.3.6","1.8-4","2.3.8"]}]}]}
+</script>
+<!--/html_preserve-->
+</div>
+</div>
+
+</article> <!-- topics -->
+
+<div class="topicsContainer">
+<div class="topicsPositioner">
+<div class="band">
+<div class="bandContent topicsListContainer">
+
+<!-- begin doc-metadata -->
+<div id="doc-metadata">
+<h1 class="title toc-ignore" style="display:none;">Maße der zentralen
+Tendenz</h1>
+</div>
+<!-- end doc-metadata -->
+
+</div> <!-- bandContent.topicsListContainer -->
+</div> <!-- band -->
+</div> <!-- topicsPositioner -->
+</div> <!-- topicsContainer -->
+
+
+</main> <!-- bandContent page -->
+</div> <!-- pageContent band -->
+
+
+
+<!-- Build Tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("section-TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<script>
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+</script>
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+
+</body>
+
+</html>
