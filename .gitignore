@@ -5,3 +5,14 @@
 .Rdata
 .httr-oauth
 .DS_Store
+
+# Ignore generated HTML Tutorials
+*.html
+
+# Ignore cached figures in HTML generation from .Rmd
+**/*_files/figure-html
+**/*_data
+
+# Ignore byproduct of a Published Shiny App
+**/rsconnect/
+
