@@ -2,6 +2,7 @@
 devtools::install()
 
 # install rtutorials for data sets from github
+remotes::install_github("NicolasH2/ggbrace")
 remotes::install_github("statistik-lehre/rtutorials")
 
 # 1. Install necessary dependencies
