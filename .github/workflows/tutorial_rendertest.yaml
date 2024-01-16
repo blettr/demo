@@ -27,4 +27,4 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Test render of tutorials
-        run: Rscript -e 'source("./.github/rscripts/tutorial_action.R")'
+        run: Rscript -e 'source(".github/rscripts/tutorial_action.R")'
