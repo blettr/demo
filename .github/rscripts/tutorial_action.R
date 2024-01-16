@@ -1,6 +1,9 @@
 # Build and install the local package for example data sets to work
 devtools::install()
 
+# install rtutorials for data sets from github
+remotes::install_github("statistik-lehre/rtutorials")
+
 # 1. Install necessary dependencies
 deps <- renv::dependencies("./inst/tutorials")$Package
 installed <- installed.packages()
@@ -16,6 +19,6 @@ tutorial_paths <- paste0("inst/tutorials/", tutorial_paths)
 
 for (p in tutorial_paths) {
   print(p)
-  try(rmarkdown::render(p))
+  rmarkdown::render(p)
 }
 
