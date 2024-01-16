@@ -1,4 +1,4 @@
-# Build and install the local package
+# Build and install the local package for example data sets to work
 devtools::install()
 
 # 1. Install necessary dependencies
