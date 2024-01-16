@@ -22,6 +22,8 @@ jobs:
             any::rcmdcheck
             any::rlang
             any::devtools
+            github::statistik-lehre/rtutorials
+            github::NicolasH2/ggbrace
 
 
       - name: Check out repository

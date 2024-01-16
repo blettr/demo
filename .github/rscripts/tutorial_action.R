@@ -1,10 +1,6 @@
 # Build and install the local package for example data sets to work
 devtools::install()
 
-# install rtutorials for data sets from github
-remotes::install_github("NicolasH2/ggbrace")
-remotes::install_github("statistik-lehre/rtutorials")
-
 # 1. Install necessary dependencies
 deps <- renv::dependencies("./inst/tutorials")$Package
 installed <- installed.packages()
